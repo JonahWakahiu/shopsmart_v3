@@ -18,6 +18,8 @@
     <main class="container mx-auto">
         {{ $slot }}
     </main>
+
+    @stack('scripts')
 </body>
 
 </html>
