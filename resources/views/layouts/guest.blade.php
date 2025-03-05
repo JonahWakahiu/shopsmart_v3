@@ -68,7 +68,7 @@
                                 </svg>
                                 <span>Profile</span>
                             </a>
-                            <a href=""
+                            <a href="{{ route('customer.orders.index') }}"
                                 class="w-full flex items-center gap-3 px-5 py-2 text-sm hover:bg-slate-100">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                     class="bi bi-box-seam size-4" viewBox="0 0 16 16">

@@ -58,7 +58,7 @@ class CheckoutController extends Controller
                     'discount' => $item->discount,
                     'total' => $item->total,
                     'product_id' => $item->product_id,
-                    'variation' => $item->variation_id,
+                    'variation_id' => $item->variation_id,
                 ]);
             }
 

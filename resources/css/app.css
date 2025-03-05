@@ -2,7 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+[x-cloak] { display: none !important; }
 
 .mySwiper .swiper-slide-thumb-active {
     opacity: 1;
   }
+
