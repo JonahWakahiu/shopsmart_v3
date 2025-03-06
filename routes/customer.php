@@ -5,6 +5,7 @@ use App\Http\Controllers\Customer\CheckoutController;
 use App\Http\Controllers\Customer\HomepageController;
 use App\Http\Controllers\Customer\OrdersController;
 use App\Http\Controllers\Customer\ProductsController;
+use App\Http\Controllers\Customer\ProfileController;
 use App\Http\Controllers\Customer\ReviewController;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
@@ -40,5 +41,13 @@ Route::middleware('auth')->group(function () {
         Route::get('', 'index')->name('index');
         Route::get('/items', 'items')->name('items');
         Route::post('', 'store')->name('store');
+    });
+
+    Route::controller(ProfileController::class)->group(function () {
+        Route::get('profile', 'index')->name('profile.index');
+
+        Route::prefix('account')->name('account.')->group(function () {
+            Route::get('', 'account')->name('index');
+        });
     });
 });

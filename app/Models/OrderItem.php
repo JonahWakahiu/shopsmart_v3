@@ -44,4 +44,48 @@ class OrderItem extends Model
     {
         return $this->hasOne(Review::class, 'order_item_id');
     }
+
+
+    protected static function booted(): void
+    {
+
+        static::saving(function (self $item) {
+            $product = Product::find($item->product_id);
+            $variation = $product->variations()->find($item->variation_id);
+
+            if ($variation) {
+                $price = $variation->price;
+                if ($variation->sale_price) {
+                    $item->discount = $variation->price - $variation->sale_price;
+                    $price = $variation->sale_price;
+                }
+
+                $item->total = $price * $item->quantity;
+                $item->price = $variation->price;
+
+            } else {
+                $price = $product->price;
+                if ($product->sale_price) {
+                    $item->discount = $product->price - $product->sale_price;
+                    $price = $product->sale_price;
+                }
+
+                $item->total = $price * $item->quantity;
+                $item->price = $product->price;
+            }
+        });
+
+        static::saved(function (self $item) {
+            $order = Order::find($item->order_id);
+            $order->subtotal = $order->items->sum(function ($item) {
+                return $item->price * $item->quantity;
+            });
+
+            $order->discount = $order->items->sum(function ($item) {
+                return $item->discount * $item->quantity;
+            });
+            $order->total = $order->items()->sum('total');
+            $order->save();
+        });
+    }
 }

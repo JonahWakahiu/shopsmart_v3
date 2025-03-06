@@ -13,7 +13,10 @@
                 </div>
             </div>
             <div class="py-3">
-                <a href="" class="flex items-center text-sm gap-3 py-2 px-3 hover:bg-slate-100">
+                <a href="{{ route('customer.profile.index') }}" @class([
+                    'flex items-center text-sm gap-3 py-2 px-3 hover:bg-slate-200',
+                    'bg-slate-200' => request()->routeIs('customer.profile.*'),
+                ])>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-person" viewBox="0 0 16 16">
                         <path
@@ -21,6 +24,8 @@
                     </svg>
                     <span>My Account</span>
                 </a>
+
+
                 <a href="{{ route('customer.orders.index') }}" @class([
                     'flex items-center text-sm gap-3 py-2 px-3 hover:bg-slate-200',
                     'bg-slate-200' => request()->routeIs('customer.orders.*'),
@@ -32,6 +37,8 @@
                     </svg>
                     <span>Orders</span>
                 </a>
+
+
                 <a href="" class="flex items-center text-sm gap-3 py-2 px-3 hover:bg-slate-100">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-envelope" viewBox="0 0 16 16">
@@ -54,6 +61,7 @@
                     </svg>
                     <span>Pending Reviews</span>
                 </a>
+
                 <a href="" class="flex items-center text-sm gap-3 py-2 px-3 hover:bg-slate-100">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-ticket" viewBox="0 0 16 16">
@@ -71,7 +79,10 @@
                 </a>
             </div>
             <div class="border-y border-slate-200 py-3">
-                <a href="" class="py-2 px-3 text-sm hover:text-orange-500 block w-full">Account Management</a>
+                <a href="{{ route('customer.account.index') }}" @class([
+                    'py-2 px-3 text-sm hover:text-orange-500 block w-full',
+                    'text-orange-500' => request()->routeIs('customer.account.*'),
+                ])>Account Management</a>
                 <a href="" class="py-2 px-3 text-sm hover:text-orange-500 block w-full">Payment Setting</a>
                 <a href="" class="py-2 px-3 text-sm hover:text-orange-500 block w-full">Address Book</a>
                 <a href="" class="py-2 px-3 text-sm hover:text-orange-500 block w-full">Newsletter
@@ -84,7 +95,9 @@
                 </form>
             </div>
         </div>
-        <div class="col-span-3 bg-white rounded">
+
+
+        <div class="col-span-3 bg-white rounded overflow-hidden">
             {{ $slot }}
         </div>
     </main>

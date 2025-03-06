@@ -54,9 +54,6 @@ class CheckoutController extends Controller
             foreach ($items as $item) {
                 $order->items()->create([
                     'quantity' => $item->quantity,
-                    'price' => $item->price,
-                    'discount' => $item->discount,
-                    'total' => $item->total,
                     'product_id' => $item->product_id,
                     'variation_id' => $item->variation_id,
                 ]);

@@ -59,6 +59,18 @@
                         @endguest
 
                         <div>
+                            @role('admin')
+                                <a href="{{ route('dashboard') }}"
+                                    class="w-full flex items-center gap-3 px-5 py-2 text-sm hover:bg-slate-100">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        fill="currentColor" class="bi bi-columns-gap" viewBox="0 0 16 16">
+                                        <path
+                                            d="M6 1v3H1V1zM1 0a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1zm14 12v3h-5v-3zm-5-1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1zM6 8v7H1V8zM1 7a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1zm14-6v7h-5V1zm-5-1a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1z" />
+                                    </svg>
+                                    <span>Dashboard</span>
+                                </a>
+                            @endrole
+
                             <a href=""
                                 class="w-full flex items-center gap-3 px-5 py-2 text-sm hover:bg-slate-100">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -90,15 +102,33 @@
                         </div>
 
                         <div class="px-3 py-3 border-t border-slate-200">
-                            <a href="{{ route('login') }}"
-                                class="w-full rounded bg-slate-100 border border-slate-200 py-2 text-sm flex items-center justify-center gap-2 hover:bg-slate-200">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="size-5">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />
-                                </svg>
-                                <span>Sign In</span>
-                            </a>
+                            @guest
+                                <a href="{{ route('login') }}"
+                                    class="w-full rounded bg-slate-100 border border-slate-200 py-2 text-sm flex items-center justify-center gap-3 hover:bg-slate-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="size-4"
+                                        fill="currentColor">
+                                        <path
+                                            d="M352 96l64 0c17.7 0 32 14.3 32 32l0 256c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0c53 0 96-43 96-96l0-256c0-53-43-96-96-96l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32zm-9.4 182.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L242.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128z" />
+                                    </svg>
+                                    <span>Sign In</span>
+                                </a>
+                            @endguest
+
+                            @auth
+                                <form action="{{ route('logout') }}" method="post">
+                                    @csrf
+
+                                    <button type="submit"
+                                        class="w-full rounded bg-slate-100 border border-slate-200 py-2 text-sm flex items-center justify-center gap-3 hover:bg-slate-200">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="size-4"
+                                            fill="currentColor" stroke-width="1">
+                                            <path
+                                                d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224 192 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128zM160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 32C43 32 0 75 0 128L0 384c0 53 43 96 96 96l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l64 0z" />
+                                        </svg>
+                                        <span>Sign out</span>
+                                    </button>
+                                </form>
+                            @endauth
                         </div>
                     </div>
                 </div>

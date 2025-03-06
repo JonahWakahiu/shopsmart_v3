@@ -40,7 +40,7 @@ class CartItem extends Model
         static::saving(function (self $cartItem) {
             $product = Product::find($cartItem->product_id);
             $variation = $product->variations()->find($cartItem->variation_id);
-            Log::info($product);
+
             if ($variation) {
                 $price = $variation->price;
                 if ($variation->sale_price) {
