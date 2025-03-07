@@ -128,6 +128,14 @@
                             </td>
                         </tr>
                     </template>
+
+                    <template x-if="customers.length == 0">
+                        <tr>
+                            <td colspan="8" class="p-4">
+                                <p class="text-slate-500">No data available at the moment</p>
+                            </td>
+                        </tr>
+                    </template>
                 </tbody>
             </table>
         </div>

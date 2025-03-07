@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->integer('rating');
             $table->text('message');
             $table->boolean('anonymous')->default(false);
+            $table->enum('status', ['pending', 'success', 'cancelled'])->default('pending');
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
             $table->foreignId('order_item_id')->constrained('order_items')->cascadeOnDelete();

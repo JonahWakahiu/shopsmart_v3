@@ -62,6 +62,7 @@ class CheckoutController extends Controller
             $order->payment()->create([
                 'status' => 'unpaid',
                 'transaction_id' => $session->id,
+                'user_id' => $request->user()->id,
             ]);
 
             DB::commit();

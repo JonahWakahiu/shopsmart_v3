@@ -96,7 +96,23 @@ class CustomersController extends Controller
      */
     public function show(User $customer)
     {
-        return view('backend.customers.show', compact('customer'));
+        $customer->loadCount('orders')->loadSum('orders', 'total')->load('order');
+        $customer->orders_sum_total = Number::currency($customer->orders_sum_total ?? 0, 'ksh');
+        $orders = $customer->orders()->with('payment')->paginate(2, ['*'], 'orders_page');
+
+        $orders->through(function ($order) {
+            $order->total = Number::currency($order->total, 'ksh');
+            $order->placed_on = Carbon::parse($order->created_at)->toFormattedDateString();
+            return $order;
+        });
+
+        $reviews = $customer->reviews()->with('product')->paginate(2, ['*'], 'reviews');
+        $reviews->through(function ($review) {
+            $review->date = Carbon::parse($review->created_at)->toFormattedDateString();
+            return $review;
+        });
+
+        return view('backend.customers.show', compact('customer', 'orders', 'reviews'));
     }
 
     /**
@@ -111,9 +127,26 @@ class CustomersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $customer)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|string',
+            'phone_number' => 'nullable',
+            'country' => 'nullable|string',
+            'city' => 'nullable|string',
+            'state' => 'nullable|string',
+            'zip_code' => 'nullable',
+            'address' => 'nullable',
+        ]);
+
+        try {
+            $user = $customer->update($validated);
+
+            return redirect()->route('customers.index');
+        } catch (\Throwable $th) {
+            return back();
+        }
     }
 
     /**

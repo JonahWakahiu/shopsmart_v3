@@ -34,7 +34,9 @@
     </x-slot>
 
     <div x-data="editCustomer">
-        <form @submit.prevent="updateCustomer($event)">
+        <form method="POSt" action="{{ route('customers.update', $customer->id) }}">
+            @csrf
+            @method('put')
 
             <p class="text-xl font-semibold mb-5">Account Information</p>
 
@@ -187,7 +189,7 @@
                     class="bg-red-100 rounded px-5 py-2 text-sm font-medium text-red-500">Delete Customer</button>
                 <button type="reset"
                     class="px-5 rounded py-2 text-sm font-medium border border-slate-200">Cancel</button>
-                <button type="submit" class="px-5 rounded py-2 text-sm font-medium bg-indigo-500 text-white">Add
+                <button type="submit" class="px-5 rounded py-2 text-sm font-medium bg-indigo-500 text-white">Update
                     Customer</button>
             </div>
         </form>
@@ -254,7 +256,8 @@
                     async updateCustomer(event) {
                         try {
                             const formData = new FormData(event.target);
-                            const response = await axios.post('{{ route('customers.store') }}',
+                            const response = await axios.put(`{{ route('customers.update', ':id') }}`
+                                .replace(':id', this.customer.id),
                                 formData);
 
                             if (response.status == 200) {

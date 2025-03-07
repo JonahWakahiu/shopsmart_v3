@@ -32,6 +32,7 @@ class OrderFactory extends Factory
                 'status' => fake()->randomElement(['unpaid', 'completed', 'failed', 'refunded']),
                 'payment_method' => fake()->randomElement(['card', 'paypal', 'mpesa']),
                 'transaction_id' => Str::random(8),
+                'user_id' => $order->user_id,
             ]);
         });
     }
