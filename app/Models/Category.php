@@ -13,6 +13,14 @@ class Category extends Model
     /** @use HasFactory<\Database\Factories\CategoryFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'slug',
+        'parent_id',
+        'active',
+        'image'
+    ];
+
     // relationships
     public function products(): HasMany
     {

@@ -26,4 +26,16 @@ class Variation extends Model
             'attributes' => 'array',
         ];
     }
+
+
+    protected static function booted(): void
+    {
+        static::saved(function (self $variation) {
+            $product = Product::find($variation->product_id);
+
+            $stock = $product->variations()->sum('stock');
+            $product->stock = $stock;
+            $product->save();
+        });
+    }
 }

@@ -354,7 +354,7 @@ class CategorySeeder extends Seeder
         foreach ($categories as $category) {
             $newCategory = Category::updateOrCreate(
                 ['name' => $category['name']],
-                ['image' => $category['image'], 'parent_id' => $parentId, 'status' => 'active']
+                ['image' => $category['image'], 'parent_id' => $parentId, 'active' => true]
             );
 
             // Recursively insert children if they exist

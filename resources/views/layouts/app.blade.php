@@ -112,7 +112,7 @@
 
             <!-- main content  -->
             <div id="main-content" class="p-4">
-                <div class="overflow-y-auto">
+                <div class="overflow-y-auto min-h-[80svh]">
 
                     @isset($header)
                         <header class="">

@@ -19,14 +19,6 @@ export default {
                     DEFAULT: '1rem',
                     sm: '0',
                 },
-                screens: {
-                    xs: '380px',
-                    sm: '600px',
-                    md: '728px',
-                    lg: '984px',
-                    xl: '1240px',
-                    '2xl': '1536px',
-                }
             }
         },
     },
