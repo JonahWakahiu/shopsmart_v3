@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class ReviewController extends Controller
+class ReviewsController extends Controller
 {
 
     public function index(Request $request): View

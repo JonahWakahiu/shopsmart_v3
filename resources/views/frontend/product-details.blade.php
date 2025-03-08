@@ -196,12 +196,347 @@
                 <div x-cloak x-show="selectedTab == 'description'">
                     <div x-text="product.description"></div>
                 </div>
-                <div x-cloak x-show="selectedTab == 'reviews'"></div>
-                <div x-cloak x-show="selectedTab == 'recommend'"></div>
-            </div>
-        </div>
+                <div x-cloak x-show="selectedTab == 'reviews'">
+                    <div class="grid grid-cols-5 divide-x divide-slate-200 py-7">
+                        <div class="col-span-1 justify-self-center">
+                            <div class="font-semibold text-3xl">
+                                <span class="text-6xl text-red-500" x-text="product.reviews_avg_rating"></span>
+                                <span>/</span>
+                                <span>5</span>
+                            </div>
 
+                            <div class="flex items-center text-red-500 mt-2 gap-1">
+                                <template x-for="i in 5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="size-6"
+                                        fill="currentColor">
+                                        <path x-show="i <= product.reviews_avg_rating"
+                                            d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
+                                        <path x-show="i > product.reviews_avg_rating"
+                                            d="M287.9 0c9.2 0 17.6 5.2 21.6 13.5l68.6 141.3 153.2 22.6c9 1.3 16.5 7.6 19.3 16.3s.5 18.1-5.9 24.5L433.6 328.4l26.2 155.6c1.5 9-2.2 18.1-9.7 23.5s-17.3 6-25.3 1.7l-137-73.2L151 509.1c-8.1 4.3-17.9 3.7-25.3-1.7s-11.2-14.5-9.7-23.5l26.2-155.6L31.1 218.2c-6.5-6.4-8.7-15.9-5.9-24.5s10.3-14.9 19.3-16.3l153.2-22.6L266.3 13.5C270.4 5.2 278.7 0 287.9 0zm0 79L235.4 187.2c-3.5 7.1-10.2 12.1-18.1 13.3L99 217.9 184.9 303c5.5 5.5 8.1 13.3 6.8 21L171.4 443.7l105.2-56.2c7.1-3.8 15.6-3.8 22.6 0l105.2 56.2L384.2 324.1c-1.3-7.7 1.2-15.5 6.8-21l85.9-85.1L358.6 200.5c-7.8-1.2-14.6-6.1-18.1-13.3L287.9 79z" />
+                                    </svg>
+                                </template>
+                            </div>
+                            <p class="mt-2 text-slate-400 font-medium text-lg"
+                                x-text="'('+product.reviews_count + ' ratings)'"></p>
+                        </div>
+
+                        <div class="col-span-4 space-y-2 px-5">
+                            {{-- 5 star --}}
+                            <div class="flex items-center gap-7">
+                                <div class="shrink-0 flex items-center text-red-600 gap-1">
+                                    <template x-for="i in 5">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="size-6"
+                                            fill="currentColor">
+                                            <path
+                                                d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
+                                        </svg>
+                                    </template>
+                                </div>
+
+                                <div class="flex-1">
+                                    <div class="rounded-full w-full bg-slate-200 h-4 relative overflow-hidden">
+                                        <div class="absolute inset-0 bg-red-600"
+                                            :style="{
+                                                width: product.reviews.filter(review => review.rating === 5).length *
+                                                    100 /
+                                                    product.reviews_count + '%'
+                                            }">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="shrink-0 min-w-16">
+                                    <span x-text="product.reviews.filter(review => review.rating == 5).length"></span>
+                                </div>
+                            </div>
+
+                            {{-- 4 star --}}
+                            <div class="flex items-center gap-7">
+                                <div class="shrink-0 flex items-center text-red-600 gap-1">
+                                    <template x-for="i in 5">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="size-6"
+                                            fill="currentColor">
+                                            <path x-cloak x-show="i <= 4"
+                                                d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
+                                            <path x-cloak x-show="i > 4"
+                                                d="M287.9 0c9.2 0 17.6 5.2 21.6 13.5l68.6 141.3 153.2 22.6c9 1.3 16.5 7.6 19.3 16.3s.5 18.1-5.9 24.5L433.6 328.4l26.2 155.6c1.5 9-2.2 18.1-9.7 23.5s-17.3 6-25.3 1.7l-137-73.2L151 509.1c-8.1 4.3-17.9 3.7-25.3-1.7s-11.2-14.5-9.7-23.5l26.2-155.6L31.1 218.2c-6.5-6.4-8.7-15.9-5.9-24.5s10.3-14.9 19.3-16.3l153.2-22.6L266.3 13.5C270.4 5.2 278.7 0 287.9 0zm0 79L235.4 187.2c-3.5 7.1-10.2 12.1-18.1 13.3L99 217.9 184.9 303c5.5 5.5 8.1 13.3 6.8 21L171.4 443.7l105.2-56.2c7.1-3.8 15.6-3.8 22.6 0l105.2 56.2L384.2 324.1c-1.3-7.7 1.2-15.5 6.8-21l85.9-85.1L358.6 200.5c-7.8-1.2-14.6-6.1-18.1-13.3L287.9 79z" />
+                                        </svg>
+                                    </template>
+                                </div>
+
+                                <div class="flex-1">
+                                    <div class="rounded-full w-full bg-slate-200 h-4 relative overflow-hidden">
+                                        <div class="absolute inset-0 bg-red-600"
+                                            :style="{
+                                                width: product.reviews.filter(review => review.rating === 4).length *
+                                                    100 /
+                                                    product.reviews_count + '%'
+                                            }">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="shrink-0 min-w-16">
+                                    <span x-text="product.reviews.filter(review => review.rating === 4).length"></span>
+                                </div>
+                            </div>
+
+
+                            {{-- 3 star --}}
+                            <div class="flex items-center gap-7">
+                                <div class="shrink-0 flex items-center text-red-600 gap-1">
+                                    <template x-for="i in 5">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="size-6"
+                                            fill="currentColor">
+                                            <path x-cloak x-show="i <= 3"
+                                                d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
+                                            <path x-cloak x-show="i > 3"
+                                                d="M287.9 0c9.2 0 17.6 5.2 21.6 13.5l68.6 141.3 153.2 22.6c9 1.3 16.5 7.6 19.3 16.3s.5 18.1-5.9 24.5L433.6 328.4l26.2 155.6c1.5 9-2.2 18.1-9.7 23.5s-17.3 6-25.3 1.7l-137-73.2L151 509.1c-8.1 4.3-17.9 3.7-25.3-1.7s-11.2-14.5-9.7-23.5l26.2-155.6L31.1 218.2c-6.5-6.4-8.7-15.9-5.9-24.5s10.3-14.9 19.3-16.3l153.2-22.6L266.3 13.5C270.4 5.2 278.7 0 287.9 0zm0 79L235.4 187.2c-3.5 7.1-10.2 12.1-18.1 13.3L99 217.9 184.9 303c5.5 5.5 8.1 13.3 6.8 21L171.4 443.7l105.2-56.2c7.1-3.8 15.6-3.8 22.6 0l105.2 56.2L384.2 324.1c-1.3-7.7 1.2-15.5 6.8-21l85.9-85.1L358.6 200.5c-7.8-1.2-14.6-6.1-18.1-13.3L287.9 79z" />
+                                        </svg>
+                                    </template>
+                                </div>
+
+                                <div class="flex-1">
+                                    <div class="rounded-full w-full bg-slate-200 h-4 relative overflow-hidden">
+                                        <div class="absolute inset-0 bg-red-600"
+                                            :style="{
+                                                width: product.reviews.filter(review => review.rating === 3).length *
+                                                    100 /
+                                                    product.reviews_count + '%'
+                                            }">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="shrink-0 min-w-16">
+                                    <span x-text="product.reviews.filter(review => review.rating === 3).length"></span>
+                                </div>
+                            </div>
+
+                            {{-- 2 star --}}
+                            <div class="flex items-center gap-7">
+                                <div class="shrink-0 flex items-center text-red-600 gap-1">
+                                    <template x-for="i in 5">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="size-6"
+                                            fill="currentColor">
+                                            <path x-cloak x-show="i <= 2"
+                                                d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
+                                            <path x-cloak x-show="i > 2"
+                                                d="M287.9 0c9.2 0 17.6 5.2 21.6 13.5l68.6 141.3 153.2 22.6c9 1.3 16.5 7.6 19.3 16.3s.5 18.1-5.9 24.5L433.6 328.4l26.2 155.6c1.5 9-2.2 18.1-9.7 23.5s-17.3 6-25.3 1.7l-137-73.2L151 509.1c-8.1 4.3-17.9 3.7-25.3-1.7s-11.2-14.5-9.7-23.5l26.2-155.6L31.1 218.2c-6.5-6.4-8.7-15.9-5.9-24.5s10.3-14.9 19.3-16.3l153.2-22.6L266.3 13.5C270.4 5.2 278.7 0 287.9 0zm0 79L235.4 187.2c-3.5 7.1-10.2 12.1-18.1 13.3L99 217.9 184.9 303c5.5 5.5 8.1 13.3 6.8 21L171.4 443.7l105.2-56.2c7.1-3.8 15.6-3.8 22.6 0l105.2 56.2L384.2 324.1c-1.3-7.7 1.2-15.5 6.8-21l85.9-85.1L358.6 200.5c-7.8-1.2-14.6-6.1-18.1-13.3L287.9 79z" />
+                                        </svg>
+                                    </template>
+                                </div>
+
+                                <div class="flex-1">
+                                    <div class="rounded-full w-full bg-slate-200 h-4 relative overflow-hidden">
+                                        <div class="absolute inset-0 bg-red-600"
+                                            :style="{
+                                                width: product.reviews.filter(review => review.rating === 2).length *
+                                                    100 /
+                                                    product.reviews_count + '%'
+                                            }">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="shrink-0 min-w-16">
+                                    <span x-text="product.reviews.filter(review => review.rating == 2).length"></span>
+                                </div>
+                            </div>
+
+                            {{-- 1 star --}}
+                            <div class="flex items-center gap-7">
+                                <div class="shrink-0 flex items-center text-red-600 gap-1">
+                                    <template x-for="i in 5">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="size-6"
+                                            fill="currentColor">
+                                            <path x-cloak x-show="i <= 1"
+                                                d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
+                                            <path x-cloak x-show="i > 1"
+                                                d="M287.9 0c9.2 0 17.6 5.2 21.6 13.5l68.6 141.3 153.2 22.6c9 1.3 16.5 7.6 19.3 16.3s.5 18.1-5.9 24.5L433.6 328.4l26.2 155.6c1.5 9-2.2 18.1-9.7 23.5s-17.3 6-25.3 1.7l-137-73.2L151 509.1c-8.1 4.3-17.9 3.7-25.3-1.7s-11.2-14.5-9.7-23.5l26.2-155.6L31.1 218.2c-6.5-6.4-8.7-15.9-5.9-24.5s10.3-14.9 19.3-16.3l153.2-22.6L266.3 13.5C270.4 5.2 278.7 0 287.9 0zm0 79L235.4 187.2c-3.5 7.1-10.2 12.1-18.1 13.3L99 217.9 184.9 303c5.5 5.5 8.1 13.3 6.8 21L171.4 443.7l105.2-56.2c7.1-3.8 15.6-3.8 22.6 0l105.2 56.2L384.2 324.1c-1.3-7.7 1.2-15.5 6.8-21l85.9-85.1L358.6 200.5c-7.8-1.2-14.6-6.1-18.1-13.3L287.9 79z" />
+                                        </svg>
+                                    </template>
+                                </div>
+
+                                <div class="flex-1">
+                                    <div class="rounded-full w-full bg-slate-200 h-4 relative overflow-hidden">
+                                        <div class="absolute inset-0 bg-red-600"
+                                            :style="{
+                                                width: product.reviews.filter(review => review.rating === 1).length *
+                                                    100 /
+                                                    product.reviews_count + '%'
+                                            }">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="shrink-0 min-w-16">
+                                    <span x-text="product.reviews.filter(review => review.rating == 1).length"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {{-- reviews details --}}
+                    <div class="mt-10">
+                        <div class="py-3 flex items-center gap-5 justify-end">
+                            <div>
+                                <x-forms.select-input name="" x-model="rating" @change="productReviews">
+                                    <option value="" selected>All Stars</option>
+                                    <option value="5">5 Stars</option>
+                                    <option value="4">4 Stars</option>
+                                    <option value="3">3 Stars</option>
+                                    <option value="2">2 Stars</option>
+                                    <option value="1">1 Stars</option>
+                                </x-forms.select-input>
+                            </div>
+                        </div>
+
+                        <div class=" divide-y divide-slate-200">
+                            <template x-for="(review, index) in reviews" :key="index">
+                                <div class="p-5 flex items-start">
+                                    <div class="shrink-0 me-5">
+                                        <img :src="review.user.avatar" alt="user avatar"
+                                            class="size-12 rounded-full object-cover object-center">
+                                    </div>
+
+                                    <div class="w-full">
+                                        <div class="flex items-center">
+                                            <div>
+                                                <p x-text="review.user.name"></p>
+                                                <p class="text-sm text-slate-500" x-text="review.date"></p>
+                                            </div>
+
+                                            <div class="ms-auto flex items-center gap-1 text-orange-500">
+                                                <template x-for="i in 5">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
+                                                        class="size-5" fill="currentColor">
+                                                        <path x-cloak x-show="i <= review.rating"
+                                                            d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
+                                                        <path x-cloak x-show="i > review.rating"
+                                                            d="M287.9 0c9.2 0 17.6 5.2 21.6 13.5l68.6 141.3 153.2 22.6c9 1.3 16.5 7.6 19.3 16.3s.5 18.1-5.9 24.5L433.6 328.4l26.2 155.6c1.5 9-2.2 18.1-9.7 23.5s-17.3 6-25.3 1.7l-137-73.2L151 509.1c-8.1 4.3-17.9 3.7-25.3-1.7s-11.2-14.5-9.7-23.5l26.2-155.6L31.1 218.2c-6.5-6.4-8.7-15.9-5.9-24.5s10.3-14.9 19.3-16.3l153.2-22.6L266.3 13.5C270.4 5.2 278.7 0 287.9 0zm0 79L235.4 187.2c-3.5 7.1-10.2 12.1-18.1 13.3L99 217.9 184.9 303c5.5 5.5 8.1 13.3 6.8 21L171.4 443.7l105.2-56.2c7.1-3.8 15.6-3.8 22.6 0l105.2 56.2L384.2 324.1c-1.3-7.7 1.2-15.5 6.8-21l85.9-85.1L358.6 200.5c-7.8-1.2-14.6-6.1-18.1-13.3L287.9 79z" />
+                                                    </svg>
+                                                </template>
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-5">
+                                            <div class="text-sm" x-text="review.message"></div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                            </template>
+
+                        </div>
+
+                        <div class="flex items-center gap-2 p-4 border-t border-slate-300">
+                            <div class="text-sm">
+                                <span>Showing</span>
+                                <span x-text="from"></span>
+                                <span>to</span>
+                                <span x-text="to"></span>
+                                <span>of</span>
+                                <span x-text="total"></span>
+                                <span>results</span>
+                            </div>
+
+                            {{-- pagination --}}
+                            <nav aria-label="pagination" class="ms-auto shrink-0 text-sm">
+                                <ul class="flex shrink-0 items-center gap-2">
+                                    <li>
+                                        <button @click="goToPage(1)" class="flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                class="bi bi-chevron-double-left size-4" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd"
+                                                    d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+                                                <path fill-rule="evenodd"
+                                                    d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0" />
+                                            </svg>
+                                        </button>
+                                    </li>
+                                    <!-- prev button -->
+                                    <li>
+                                        <button @click="prevPage" type="button"
+                                            class="flex items-center rounded-md p-1 hover:text-primary"
+                                            aria-label="previous page">
+                                            Previous
+                                        </button>
+                                    </li>
+
+                                    <template x-if="currentPage > 4">
+                                        <li>
+                                            <a href="#" class="flex size-6 items-center justify-center"
+                                                aria-label="more pages">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="1.5" aria-hidden="true"
+                                                    stroke="currentColor" class="size-6">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                                                </svg>
+                                            </a>
+                                        </li>
+                                    </template>
+
+                                    <template x-for="page in visiblePages" :key="page">
+                                        <li>
+                                            <button type="button" @click="goToPage(page)"
+                                                class="flex size-6 items-center justify-center rounded-md p-1 "
+                                                :class="{ 'bg-indigo-600 text-white': currentPage === page }"
+                                                aria-current="page" aria-label="page 2" x-text="page"></button>
+                                        </li>
+                                    </template>
+
+                                    <template x-if="currentPage < totalPages - 3">
+                                        <li>
+                                            <button type="button"
+                                                class="flex size-6 items-center justify-center rounded-md p-1"
+                                                aria-label="more pages">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="1.5" aria-hidden="true"
+                                                    stroke="currentColor" class="size-6">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                                                </svg>
+                                            </button>
+                                        </li>
+                                    </template>
+
+                                    <li>
+                                        <button @click="nextPage" type="button"
+                                            class="flex items-center rounded-md p-1" aria-label="next page">
+                                            Next
+                                        </button>
+                                    </li>
+
+                                    <li>
+                                        <button class="flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" @click="goToPage(totalPages)"
+                                                fill="currentColor" class="bi bi-chevron-double-right size-4"
+                                                viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd"
+                                                    d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708" />
+                                                <path fill-rule="evenodd"
+                                                    d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708" />
+                                            </svg>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
     </div>
+    <div x-cloak x-show="selectedTab == 'recommend'"></div>
+    </div>
+
 
     <x-products-card class="mt-5" />
     @push('scripts')
@@ -209,11 +544,80 @@
             document.addEventListener('alpine:init', () => {
                 Alpine.data('productDetails', () => ({
                     product: @json($product_details['product']),
+                    reviews: @json($product_details['reviews']).data,
                     quantity: 1,
                     selectedTab: 'description',
                     variation: @json($product_details['variation']),
                     variationAttributes: @json($product_details['variation']?->attributes),
                     loading: false,
+
+                    from: 1,
+                    to: 10,
+                    total: 0,
+                    currentPage: 1,
+                    totalPages: 1,
+
+                    // filter
+                    rating: '',
+
+                    async productReviews() {
+                        try {
+                            const response = await axios.get(
+                                `{{ route('customer.product.reviews', ':productId') }}`.replace(
+                                    ':productId', this.product.id), {
+                                    params: {
+                                        page: this.currentPage,
+
+                                        rating: this.rating,
+
+                                    }
+                                });
+
+                            if (response.status === 200) {
+                                console.log(response);
+                                this.reviews = response.data.data;
+                                this.from = response.data.from;
+                                this.to = response.data.to;
+                                this.total = response.data.total;
+                                this.currentPage = response.data.current_page;
+                                this.totalPages = response.data.last_page;
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    },
+
+                    visiblePages() {
+                        const pages = [];
+                        const delta = 1;
+                        const start = Math.max(1, this.currentPage - delta);
+                        const end = Math.min(this.totalPages, this.currentPage + delta);
+
+                        for (let i = start; i <= end; i++) {
+                            pages.push(i);
+                        }
+                        return pages;
+                    },
+
+                    prevPage() {
+                        if (this.currentPage > 1) {
+                            this.currentPage--;
+                            this.productReviews();
+                        }
+                    },
+
+                    nextPage() {
+                        if (this.currentPage < this.totalPages) {
+                            this.currentPage++;
+                            this.productReviews();
+                        }
+                    },
+
+                    goToPage(page) {
+                        this.currentPage = page;
+                        this.productReviews();
+                    },
+
 
                     decreaseQuantity() {
                         if (this.quantity > 1) {
@@ -284,6 +688,13 @@
                                 swiper: swiper,
                             },
                         });
+
+                        this.reviews = @json($product_details['reviews']).data;
+                        this.from = @json($product_details['reviews']).from;
+                        this.to = @json($product_details['reviews']).to;
+                        this.total = @json($product_details['reviews']).total;
+                        this.currentPage = @json($product_details['reviews']).current_page;
+                        this.totalPages = @json($product_details['reviews']).last_page;
 
                     }
                 }))

@@ -16,7 +16,7 @@
                     </svg>
                 </li>
                 <li class="flex items-center gap-1">
-                    <a href="#" class="hover:text-slate-900 dark:hover:text-white">Reviews</a>
+                    <a href="#" class="hover:text-slate-900 dark:hover:text-white">Attributes</a>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true"
                         stroke-width="2" stroke="currentColor" class="size-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
@@ -28,18 +28,28 @@
         </nav>
 
         <h2 class="font-bold text-xl text-gray-800 leading-tight">
-            {{ __('Reviews') }}
+            {{ __('Attributes') }}
         </h2>
     </x-slot>
 
 
-    <div x-data="reviews" class="rounded bg-slate-50 shadow">
+    <div x-data="attributes" class="rounded bg-slate-50 shadow">
         <div class="flex items-center p-3">
             {{-- search input --}}
             <x-forms.search-input x-model="q" />
 
+            <div class="ms-auto">
+                <button @click="openModal" type="button"
+                    class="px-5 py-2 text-sm bg-indigo-500 text-white rounded flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="size-4 shrink-0"
+                        fill="currentColor">
+                        <path
+                            d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z" />
+                    </svg>
+                    <span>New attribute</span>
+                </button>
+            </div>
         </div>
-
         <div class="overflow-hidden w-full overflow-x-auto">
             <table class="w-full text-left text-sm">
                 <thead class="border-y border-slate-200 text-slate-800">
@@ -49,95 +59,54 @@
                                 <x-forms.checkbox id="checkAll" x-model="checkAll" />
                             </label>
                         </th>
-                        <th scope="col" class="p-4">Review Id</th>
-                        <th scope="col" class="p-4">Product</th>
-                        <th scope="col" class="p-4">User</th>
-                        <th scope="col" class="p-4">Rating</th>
-                        <th scope="col" class="p-4">Review</th>
-                        <th scope="col" class="p-4">Status</th>
-                        <th scope="col" class="p-4 ">Date</th>
+                        <th scope="col" class="p-4">Name</th>
+                        <th scope="col" class="p-4">Slug</th>
+                        <th scope="col" class="p-4">Type</th>
+                        <th scope="col" class="p-4">Values</th>
+                        <th scope="col" class="p-4">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-200">
-                    <template x-for="review in reviews" :key="review.id">
+                    <template x-for="attribute in attributes" :key="attribute.id">
                         <tr>
                             <td class="p-4">
-                                <label :for="review.id"
+                                <label :for="attribute.id"
                                     class="flex items-center text-on-surface dark:text-on-surface-dark ">
-                                    <x-forms.checkbox ::id="review.id" ::checked="checkAll" />
+                                    <x-forms.checkbox ::id="attribute.id" ::checked="checkAll" />
                                 </label>
                             </td>
-                            <td class="p-4 whitespace-nowrap" x-text="review.review_id"></td>
-                            <td class="p-4 min-w-60">
-                                <p class="line-clamp-3" x-text="review.product.name"></p>
-                            </td>
-
-                            <td class="p-4">
-                                <div class="flex w-max items-center gap-2">
-                                    <img class="size-8 rounded-full object-cover" :src="review.user.avatar"
-                                        alt="user avatar" />
-                                    <div class="flex flex-col">
-                                        <span class="text-slate-900" x-text="review.user.name"></span>
-                                    </div>
-                                </div>
-                            </td>
-
+                            <td class="p-4" x-text="attribute.name"></td>
+                            <td class="p-4" x-text="attribute.slug"></td>
+                            <td class="p-4" x-text="attribute.watch_type"></td>
                             <td class="p-4 whitespace-nowrap">
-                                <div class="flex items-center gap-1">
-                                    <template x-for="i in 5">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
-                                            class="size-4 text-orange-500" fill="currentColor">
-                                            <path x-show="i <= review.rating"
-                                                d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                            <path x-show="i > review.rating"
-                                                d="M287.9 0c9.2 0 17.6 5.2 21.6 13.5l68.6 141.3 153.2 22.6c9 1.3 16.5 7.6 19.3 16.3s.5 18.1-5.9 24.5L433.6 328.4l26.2 155.6c1.5 9-2.2 18.1-9.7 23.5s-17.3 6-25.3 1.7l-137-73.2L151 509.1c-8.1 4.3-17.9 3.7-25.3-1.7s-11.2-14.5-9.7-23.5l26.2-155.6L31.1 218.2c-6.5-6.4-8.7-15.9-5.9-24.5s10.3-14.9 19.3-16.3l153.2-22.6L266.3 13.5C270.4 5.2 278.7 0 287.9 0zm0 79L235.4 187.2c-3.5 7.1-10.2 12.1-18.1 13.3L99 217.9 184.9 303c5.5 5.5 8.1 13.3 6.8 21L171.4 443.7l105.2-56.2c7.1-3.8 15.6-3.8 22.6 0l105.2 56.2L384.2 324.1c-1.3-7.7 1.2-15.5 6.8-21l85.9-85.1L358.6 200.5c-7.8-1.2-14.6-6.1-18.1-13.3L287.9 79z" />
-
-                                        </svg>
-                                    </template>
+                                <div>
+                                    <p x-text="attribute.values.map(value => value.name).join(', ')"></p>
+                                    <a :href="'{{ route('attributes.show', ':id') }}'.replace(':id', attribute.id)"
+                                        class="hover:underline text-xs text-indigo-500 p-1 rounded">
+                                        Configure terms
+                                    </a>
                                 </div>
                             </td>
-                            <td class="p-4 min-w-96">
-                                <p class="line-clamp-3" x-text="review.message"></p>
-                            </td>
-                            <td class="p-4">
-                                <div class="text-xs px-2 py-0.5 rounded flex items-center gap-2 w-fit capitalize border"
-                                    :class="{
-                                        'bg-indigo-100 text-indigo-500 border-indigo-500': review.status ==
-                                            'pending',
-                                        'bg-green-100 text-green-500 border-green-500': review.status ==
-                                            'publish',
-                                        'bg-red-100 text-red-500 border-red-500': review.status ==
-                                            'cancel',
-                                    }">
-                                    <span
-                                        x-text="review.status == 'publish' ? 'Published' : review.status == 'cancel' ? 'Cancelled' : 'Pending'">
-                                    </span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="size-3"
-                                        fill="currentColor">
-                                        <path x-cloak x-show="review.status == 'pending'"
-                                            d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120l0 136c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2 280 120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
-                                        <path x-cloak x-show="review.status == 'publish'"
-                                            d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-                                        <path x-cloak x-show="review.status == 'cancel'"
-                                            d="M96 64c0-17.7-14.3-32-32-32S32 46.3 32 64l0 256c0 17.7 14.3 32 32 32s32-14.3 32-32L96 64zM64 480a40 40 0 1 0 0-80 40 40 0 1 0 0 80z" />
-                                    </svg>
-                                </div>
-                            </td>
-                            <td class="p-4 whitespace-nowrap" x-text="review.date"></td>
                             <td class="p-4">
                                 <div class="flex items-center gap-2">
-                                    {{-- edit review --}}
-                                    <button @click="openModal(review)" type="button"
+
+                                    {{-- edit attribute --}}
+                                    <button type="button" @click="openEditModal(attribute)"
                                         class="bg-indigo-100 text-indigo-500 p-1 rounded">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="size-4"
                                             fill="currentColor">
-                                            <path
-                                                d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160L0 416c0 53 43 96 96 96l256 0c53 0 96-43 96-96l0-96c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7-14.3 32-32 32L96 448c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 64z" />
+                                            <path d=" M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9
+                                30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5
+                                21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4
+                                21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160L0 416c0 53 43 96
+                                96 96l256 0c53 0 96-43 96-96l0-96c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7-14.3
+                                32-32 32L96 448c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l96 0c17.7 0 32-14.3
+                                32-32s-14.3-32-32-32L96 64z" />
                                         </svg>
                                     </button>
 
-                                    {{-- delete review --}}
-                                    <button @click="deleteReview(review)" type="button"
+                                    {{-- delete attribute --}}
+                                    <button @click="deleteattribute(attribute)" type="button"
                                         class="bg-red-100 text-red-500 p-1 rounded">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="size-4"
                                             fill="currentColor">
@@ -150,7 +119,7 @@
                         </tr>
                     </template>
 
-                    <template x-if="reviews.length == 0">
+                    <template x-if="attributes.length == 0">
                         <tr>
                             <td colspan="8" class="p-4">
                                 <p class="text-slate-500">No data available at the moment</p>
@@ -163,7 +132,7 @@
 
         <div class="flex items-center gap-2 p-4 border-t border-slate-300">
             <x-forms.input-label for="rowsPerPage">Rows per page
-                <x-forms.select-input x-model="rowsPerPage" id="rowPerPage" @change="reviewsList">
+                <x-forms.select-input x-model="rowsPerPage" id="rowPerPage" @change="attributesList">
                     <option value="10">10</option>
                     <option value="20">20</option>
                     <option value="50">50</option>
@@ -261,7 +230,7 @@
         </div>
 
 
-
+        {{-- new attribute modal --}}
         <div x-cloak x-show="modalIsOpen" x-transition.opacity.duration.200ms x-trap.inert.noscroll="modalIsOpen"
             x-on:keydown.esc.window="closeModal" x-on:click.self="closeModal"
             class="fixed inset-0 z-30 flex items-end justify-center bg-black/20 p-4 pb-8 backdrop-blur-md sm:items-center lg:p-8">
@@ -269,7 +238,8 @@
             <div x-show="modalIsOpen"
                 x-transition:enter="transition ease-out duration-200 delay-100 motion-reduce:transition-opacity"
                 x-transition:enter-start="opacity-0 scale-50" x-transition:enter-end="opacity-100 scale-100"
-                class="flex max-w-lg w-96 flex-col gap-4 relative rounded border border-slate-200 bg-white text-slate-600 p-5">
+                class="flex max-w-lg w-[24rem] flex-col gap-4 relative rounded border border-slate-200 bg-white text-slate-600 p-5"
+                x-data="{ watch_shape: '' }">
 
                 <button @click="closeModal"
                     class="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2 bg-white shadow p-1 rounded">
@@ -281,26 +251,128 @@
                 </button>
                 <!-- Dialog Header -->
 
-                <div class="mb-5">
-                    <p class="text-xl font-medium">Edit: <span class="text-base text-slate-500"
-                            x-text="selectedReview.review_id"></span> </span></p>
+                <div class="">
+                    <p class="text-xl font-medium">Add new Attribute</p>
+                    <p class="text-sm text-slate-500 mt-2">Attribute let you define extra product data, such as size or
+                        color.</p>
                 </div>
 
-                <form @submit.prevent="updateReview($event)">
+                <form @submit.prevent="newAttribute($event)">
                     @csrf
-                    @method('PATCH')
-
-                    <p class="text-sm text-slate-500">You're about to update this review status. Don't worry, changes
-                        can always be adjusted later!</p>
+                    <div>
+                        <x-forms.input-label value="Name" />
+                        <x-forms.text-input class="w-full" name="name" />
+                    </div>
 
                     <div class="mt-4">
-                        <x-forms.input-label value="Review Status" for="status" class="mb-1" />
-                        <x-forms.select-input name="status" id="status" class="w-full"
-                            x-model="selectedReview.status">
-                            <option value="pending">Pending</option>
-                            <option value="publish">Publish</option>
-                            <option value="cancel">Cancel</option>
+                        <x-forms.input-label value="Slug" />
+                        <x-forms.text-input class=" w-full" name="slug" />
+                    </div>
+
+                    <div class="mt-4">
+                        <x-forms.input-label value="Watch Type" />
+                        <x-forms.select-input class="w-full" name="watch_type">
+                            <option value="" selected>Select</option>
+                            <option value="label">Label</option>
+                            <option value="color">Color</option>
+                            <option value="image">Image</option>
                         </x-forms.select-input>
+                    </div>
+
+                    <div class="mt-4">
+                        <x-forms.input-label value="Watch Shape" />
+                        <x-forms.select-input class="w-full" name="watch_shape" x-model="watch_shape">
+                            <option value="" selected>Select</option>
+                            <option value="square">Square</option>
+                            <option value="rounded_corners">Rounded corner</option>
+                            <option value="circle">Circle</option>
+                        </x-forms.select-input>
+                    </div>
+
+                    <div class="mt-4" x-cloak x-show="watch_shape">
+                        <x-forms.input-label value="Size" />
+                        <x-forms.text-input class="" name="watch_size" class="w-full" type="number"
+                            value="24" />
+                    </div>
+
+                    <div class="mt-5 flex items-center gap-3">
+                        <button type="submit" class="px-5 py-2 rounded bg-indigo-500 text-white text-sm">Add
+                            attribute</button>
+
+                        <button type="reset"
+                            class="px-5 py-2 rounded border border-slate-200 text-sm bg-slate-50">Reset</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {{-- edit modal --}}
+        <div x-cloak x-show="editModalIsOpen" x-transition.opacity.duration.200ms
+            x-trap.inert.noscroll="editModalIsOpen" x-on:keydown.esc.window="closeEditModal"
+            x-on:click.self="closeEditModal"
+            class="fixed inset-0 z-30 flex items-end justify-center bg-black/20 p-4 pb-8 backdrop-blur-md sm:items-center lg:p-8">
+            <!-- Modal Dialog -->
+            <div x-show="editModalIsOpen"
+                x-transition:enter="transition ease-out duration-200 delay-100 motion-reduce:transition-opacity"
+                x-transition:enter-start="opacity-0 scale-50" x-transition:enter-end="opacity-100 scale-100"
+                class="flex max-w-lg w-[24rem] flex-col gap-4 relative rounded border border-slate-200 bg-white text-slate-600 p-5">
+
+                <button @click="closeEditModal"
+                    class="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2 bg-white shadow p-1 rounded">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="size-4"
+                        fill="currentColor">
+                        <path
+                            d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                    </svg>
+                </button>
+                <!-- Dialog Header -->
+
+                <div class="">
+                    <p class="text-xl font-medium">Edit <span x-text="selectedAttribute.name"></span></p>
+                    <p class="text-sm text-slate-500 mt-2">Attribute let you define extra product data, such as size or
+                        color.</p>
+                </div>
+
+                <form @submit.prevent="updateAttribute($event)">
+                    @csrf
+                    @method('put')
+
+                    <div>
+                        <x-forms.input-label value="Name" />
+                        <x-forms.text-input class="w-full" name="name" x-model="selectedAttribute.name" />
+                    </div>
+
+                    <div class="mt-4">
+                        <x-forms.input-label value="Slug" />
+                        <x-forms.text-input class=" w-full" name="slug" x-model="selectedAttribute.slug" />
+                    </div>
+
+                    <div class="mt-4">
+                        <x-forms.input-label value="Watch Type" />
+                        <x-forms.select-input class="w-full" name="watch_type"
+                            x-model="selectedAttribute.watch_type">
+                            <option value="" selected>Select</option>
+                            <option value="label">Label</option>
+                            <option value="color">Color</option>
+                            <option value="image">Image</option>
+                        </x-forms.select-input>
+                    </div>
+
+                    <div class="mt-4">
+                        <x-forms.input-label value="Watch Shape" />
+                        <x-forms.select-input class="w-full" name="watch_shape"
+                            x-model="selectedAttribute.watch_shape">
+                            <option value="" selected>Select</option>
+                            <option value="square">Square</option>
+                            <option value="rounded_corners">Rounded corner</option>
+                            <option value="circle">Circle</option>
+                        </x-forms.select-input>
+                    </div>
+
+                    <div class="mt-4" x-cloak x-show="selectedAttribute.watch_shape">
+                        <x-forms.input-label value="Size" />
+                        <x-forms.text-input class="" name="watch_size" class="w-full" type="number"
+                            value="24" x-model="selectedAttribute.watch_size" />
                     </div>
 
                     <div class="mt-5 flex items-center gap-3">
@@ -313,16 +385,23 @@
                 </form>
             </div>
         </div>
+
     </div>
+
+
+
 
     @push('scripts')
         <script>
             document.addEventListener('alpine:init', () => {
-                Alpine.data('reviews', () => ({
-                    reviews: {},
+
+                Alpine.data('attributes', () => ({
+                    attributes: {},
+                    selectedAttribute: {},
                     checkAll: false,
                     modalIsOpen: false,
-                    selectedReview: {},
+                    editModalIsOpen: false,
+                    errors: {},
 
                     // pagination
                     rowsPerPage: 10,
@@ -331,23 +410,32 @@
                     total: 0,
                     currentPage: 1,
                     totalPages: 1,
+                    checked: 0,
 
                     // filter
                     q: '',
 
-                    openModal(review) {
-                        this.selectedReview = review;
+                    openModal() {
                         this.modalIsOpen = true;
                     },
 
                     closeModal() {
                         this.modalIsOpen = false;
-                        this.selectedReview = {};
                     },
 
-                    async reviewsList() {
+                    openEditModal(attribute) {
+                        this.selectedAttribute = attribute;
+                        this.editModalIsOpen = true;
+                    },
+
+                    closeEditModal() {
+                        this.selectedAttribute = {};
+                        this.editModalIsOpen = false;
+                    },
+
+                    async attributesList() {
                         try {
-                            const response = await axios.get('{{ route('reviews.list') }}', {
+                            const response = await axios.get('{{ route('attributes.list') }}', {
                                 params: {
                                     rowsPerPage: this.rowsPerPage,
                                     page: this.currentPage,
@@ -358,7 +446,7 @@
                             });
 
                             if (response.status === 200) {
-                                this.reviews = response.data.data;
+                                this.attributes = response.data.data;
                                 this.from = response.data.from;
                                 this.to = response.data.to;
                                 this.total = response.data.total;
@@ -385,31 +473,31 @@
                     prevPage() {
                         if (this.currentPage > 1) {
                             this.currentPage--;
-                            this.reviewsList();
+                            this.attributesList();
                         }
                     },
 
                     nextPage() {
                         if (this.currentPage < this.totalPages) {
                             this.currentPage++;
-                            this.reviewsList();
+                            this.attributesList();
                         }
                     },
 
                     goToPage(page) {
                         this.currentPage = page;
-                        this.reviewsList();
+                        this.attributesList();
                     },
 
-                    async deleteReview(review) {
+                    async deleteattribute(attribute) {
                         try {
                             if (confirm('Are you sure?')) {
                                 const response = await axios.delete(
-                                    `{{ route('reviews.destroy', ':id') }}`.replace(':id',
-                                        review.id));
+                                    `{{ route('attributes.destroy', ':id') }}`.replace(':id',
+                                        attribute.id));
 
                                 if (response.status == 200) {
-                                    this.reviewsList();
+                                    this.attributesList();
                                 }
                             }
 
@@ -418,35 +506,52 @@
                         }
                     },
 
-                    async updateReview(event) {
+                    async newAttribute(event) {
                         try {
+                            this.errors = {};
                             const formData = new FormData(event.target);
-                            const response = await axios.post(
-                                `{{ route('reviews.update', ':id') }}`.replace(':id',
-                                    this.selectedReview.id), formData);
+
+                            const response = await axios.post('{{ route('attributes.store') }}',
+                                formData);
 
                             if (response.status == 200) {
                                 event.target.reset();
                                 this.closeModal();
-                                this.reviewsList();
+                                this.attributesList();
                             }
+                        } catch (error) {
+                            console.log(error);
+                        }
 
+                    },
+
+                    async updateAttribute(event) {
+                        try {
+                            const formData = new FormData(event.target);
+                            const response = await axios.post(`{{ route('attributes.update', ':id') }}`
+                                .replace(':id', this.selectedAttribute.id), formData);
+
+                            if (response.status == 200) {
+                                this.closeEditModal();
+                                event.target.reset();
+                                this.attributesList();
+                            }
                         } catch (error) {
                             console.log(error);
                         }
                     },
 
                     init() {
-                        this.reviews = @json($reviews).data;
-                        this.from = @json($reviews).from;
-                        this.to = @json($reviews).to;
-                        this.total = @json($reviews).total;
-                        this.currentPage = @json($reviews).current_page;
-                        this.totalPages = @json($reviews).last_page;
+                        this.attributes = @json($attributes).data;
+                        this.from = @json($attributes).from;
+                        this.to = @json($attributes).to;
+                        this.total = @json($attributes).total;
+                        this.currentPage = @json($attributes).current_page;
+                        this.totalPages = @json($attributes).last_page;
 
 
                         this.$watch('q', () => {
-                            this.reviewsList();
+                            this.attributesList();
                         });
                     }
                 }))

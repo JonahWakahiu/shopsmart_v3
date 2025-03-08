@@ -16,14 +16,14 @@ class OrderSeeder extends Seeder
     public function run(): void
     {
         Order::factory()
-            ->count(100)
+            ->count(50)
             ->has(OrderItem::factory()
-                ->count(rand(1, 10)), 'items')
+                ->count(rand(10, 20)), 'items')
             ->create();
 
         $orderItems = OrderItem::with(['order.user', 'product'])
-            ->where('status', 'delivered')
-            ->whereHas('order.payment', fn($query) => $query->where('status', 'completed'))
+            // ->where('status', 'delivered')
+            // ->whereHas('order.payment', fn($query) => $query->where('status', 'completed'))
             ->get();
 
 
@@ -32,6 +32,7 @@ class OrderSeeder extends Seeder
                 'user_id' => $item->order->user->id,
                 'product_id' => $item->product->id,
                 'order_item_id' => $item->id,
+                'status' => 'publish',
             ]);
         });
     }

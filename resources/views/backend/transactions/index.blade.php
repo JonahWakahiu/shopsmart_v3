@@ -42,7 +42,7 @@
 
         <div class="overflow-hidden w-full overflow-x-auto">
             <table class="w-full text-left text-sm">
-                <thead class="btransaction-y btransaction-slate-200 text-slate-800">
+                <thead class="border-y border-slate-200 text-slate-800">
                     <tr>
                         <th scope="col" class="p-4">
                             <label for="checkAll" class="flex items-center text-on-surface dark:text-on-surface-dark ">
@@ -80,17 +80,17 @@
                             </td>
                             <td class="p-4" x-text="transaction.amount"></td>
                             <td class="p-4">
-                                <div class="text-xs px-2 py-0.5 rounded flex items-center gap-2 w-fit capitalize btransaction"
+                                <div class="text-xs px-2 py-0.5 rounded flex items-center gap-2 w-fit capitalize border"
                                     :class="{
-                                        'bg-orange-100 text-orange-500 btransaction-orange-500': transaction
+                                        'bg-orange-100 text-orange-500 border-orange-500': transaction
                                             .status ==
                                             'unpaid',
-                                        'bg-green-100 text-green-500 btransaction-green-500': transaction
+                                        'bg-green-100 text-green-500 border-green-500': transaction
                                             .status ==
                                             'completed',
-                                        'bg-red-100 text-red-500 btransaction-red-500': transaction.status ==
+                                        'bg-red-100 text-red-500 border-red-500': transaction.status ==
                                             'failed',
-                                        'bg-indigo-100 text-indigo-500 btransaction-indigo-500': transaction
+                                        'bg-indigo-100 text-indigo-500 border-indigo-500': transaction
                                             .status ==
                                             'refunded',
                                     }">
@@ -159,7 +159,7 @@
             </table>
         </div>
 
-        <div class="flex items-center gap-2 p-4 btransaction-t btransaction-slate-300">
+        <div class="flex items-center gap-2 p-4 border-t border-slate-300">
             <x-forms.input-label for="rowsPerPage">Rows per page
                 <x-forms.select-input x-model="rowsPerPage" id="rowPerPage" @change="transactionsList">
                     <option value="10">10</option>

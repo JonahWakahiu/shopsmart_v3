@@ -2,6 +2,7 @@
 
 namespace App\View\Components;
 
+use App\Models\Category;
 use Illuminate\View\Component;
 use Illuminate\View\View;
 
@@ -12,6 +13,7 @@ class GuestLayout extends Component
      */
     public function render(): View
     {
-        return view('layouts.guest');
+        $parentCategories = Category::whereNotNull("parent_id")->orderBy("name", "asc")->get();
+        return view('layouts.guest', compact('parentCategories'));
     }
 }

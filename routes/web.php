@@ -1,10 +1,14 @@
 <?php
 
+use App\Http\Controllers\Backend\AttributesController;
+use App\Http\Controllers\Backend\AttributeValuesController;
 use App\Http\Controllers\Backend\CategoriesController;
 use App\Http\Controllers\Backend\CustomersController;
 use App\Http\Controllers\Backend\OrdersController;
+use App\Http\Controllers\Backend\PermissionsController;
 use App\Http\Controllers\Backend\ProductsController;
 use App\Http\Controllers\Backend\ReviewsController;
+use App\Http\Controllers\Backend\RolesController;
 use App\Http\Controllers\Backend\TransactionsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -45,6 +49,20 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::get('reviews/list', [ReviewsController::class, 'list'])->name('reviews.list');
     Route::resource('reviews', ReviewsController::class);
+
+    Route::get('roles/list', [RolesController::class, 'list'])->name('roles.list');
+    Route::resource('roles', RolesController::class);
+
+    Route::get('permissions/list', [PermissionsController::class, 'list'])->name('permissions.list');
+    Route::resource('permissions', PermissionsController::class);
+
+
+    Route::get('attributes/list', [AttributesController::class, 'list'])->name('attributes.list');
+    Route::resource('attributes', AttributesController::class);
+
+
+    Route::get('attributes.values/list', [AttributeValuesController::class, 'list'])->name('attributes.values.list');
+    Route::resource('attributes.values', AttributeValuesController::class);
 });
 
 require __DIR__ . '/auth.php';

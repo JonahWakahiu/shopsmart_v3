@@ -6,7 +6,7 @@ use App\Http\Controllers\Customer\HomepageController;
 use App\Http\Controllers\Customer\OrdersController;
 use App\Http\Controllers\Customer\ProductsController;
 use App\Http\Controllers\Customer\ProfileController;
-use App\Http\Controllers\Customer\ReviewController;
+use App\Http\Controllers\Customer\ReviewsController;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 
@@ -17,31 +17,38 @@ Route::controller(ProductsController::class)->group(function () {
 });
 
 
+Route::get('product/{product}/reviews', [ProductsController::class, 'productReviews'])->name('product.reviews');
+
+
 Route::middleware('auth')->group(function () {
-    Route::controller(CartController::class)->prefix('cart')->name('cart.')->group(function () {
-        Route::get('', 'index')->name('index');
-        Route::get('items', 'items')->name('items');
-        Route::post('', 'store')->name('store');
-        Route::put('', 'update')->name('update');
-        Route::delete('', 'destroyItem')->name('destroy.item');
-        Route::delete('/items', 'clear')->name('clear.items');
-    });
+    Route::controller(CartController::class)
+        ->prefix('cart')->name('cart.')->group(function () {
+            Route::get('', 'index')->name('index');
+            Route::get('items', 'items')->name('items');
+            Route::post('', 'store')->name('store');
+            Route::put('', 'update')->name('update');
+            Route::delete('', 'destroyItem')->name('destroy.item');
+            Route::delete('/items', 'clear')->name('clear.items');
+        });
 
-    Route::controller(CheckoutController::class)->name('checkout.')->prefix('checkout')->group(function () {
-        Route::post('', 'checkout')->name('session');
-        Route::get('success', 'success')->name('success');
-        Route::get('cancel', 'cancel')->name('cancel');
-    });
+    Route::controller(CheckoutController::class)->name('checkout.')
+        ->prefix('checkout')->group(function () {
+            Route::post('', 'checkout')->name('session');
+            Route::get('success', 'success')->name('success');
+            Route::get('cancel', 'cancel')->name('cancel');
+        });
 
-    Route::controller(OrdersController::class)->prefix('orders')->name('orders.')->group(function () {
-        Route::get('', 'index')->name('index');
-    });
+    Route::controller(OrdersController::class)
+        ->prefix('orders')->name('orders.')->group(function () {
+            Route::get('', 'index')->name('index');
+        });
 
-    Route::controller(ReviewController::class)->prefix('reviews')->name('reviews.')->group(function () {
-        Route::get('', 'index')->name('index');
-        Route::get('/items', 'items')->name('items');
-        Route::post('', 'store')->name('store');
-    });
+    Route::controller(ReviewsController::class)
+        ->prefix('reviews')->name('reviews.')->group(function () {
+            Route::get('', 'index')->name('index');
+            Route::get('/items', 'items')->name('items');
+            Route::post('', 'store')->name('store');
+        });
 
     Route::controller(ProfileController::class)->group(function () {
         Route::get('profile', 'index')->name('profile.index');

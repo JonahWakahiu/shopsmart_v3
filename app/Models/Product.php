@@ -13,6 +13,11 @@ class Product extends Model
     use HasFactory;
 
     //relationships
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
     public function variations(): HasMany
     {
         return $this->hasMany(Variation::class);

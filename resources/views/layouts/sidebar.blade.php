@@ -89,12 +89,16 @@
                           class="flex items-center rounded-radius gap-2 px-2 py-1.5 text-sm text-on-surface underline-offset-2 hover:bg-primary/5 hover:text-on-surface-strong focus:outline-hidden focus-visible:underline dark:text-on-surface-dark dark:hover:bg-primary-dark/5 dark:hover:text-on-surface-dark-strong">Tags</a>
                   </li>
                   <li class="px-1 py-0.5 first:mt-2">
-                      <a href="#"
-                          class="flex items-center rounded-radius gap-2 px-2 py-1.5 text-sm text-on-surface underline-offset-2 hover:bg-primary/5 hover:text-on-surface-strong focus:outline-hidden focus-visible:underline dark:text-on-surface-dark dark:hover:bg-primary-dark/5 dark:hover:text-on-surface-dark-strong">Attributes</a>
+                      <a href="{{ route('attributes.index') }}" @class([
+                          'flex items-center rounded-radius gap-2 px-2 py-1.5 text-sm text-on-surface underline-offset-2 hover:bg-primary/5 hover:text-on-surface-strong focus:outline-hidden focus-visible:underline',
+                          'bg-black/10 text-slate-900' => request()->routeIs('attributes.*'),
+                      ])>Attributes</a>
                   </li>
                   <li class="px-1 py-0.5 first:mt-2">
-                      <a href="#"
-                          class="flex items-center rounded-radius gap-2 px-2 py-1.5 text-sm text-on-surface underline-offset-2 hover:bg-primary/5 hover:text-on-surface-strong focus:outline-hidden focus-visible:underline dark:text-on-surface-dark dark:hover:bg-primary-dark/5 dark:hover:text-on-surface-dark-strong">Reviews</a>
+                      <a href="{{ route('reviews.index') }}" @class([
+                          'flex items-center rounded-radius gap-2 px-2 py-1.5 text-sm text-on-surface underline-offset-2 hover:bg-primary/5 hover:text-on-surface-strong focus:outline-hidden focus-visible:underline',
+                          'bg-black/10 text-slate-900' => request()->routeIs('reviews.*'),
+                      ])>Reviews</a>
                   </li>
               </ul>
           </div>
@@ -167,17 +171,16 @@
 
               <ul x-cloak x-collapse x-show="isExpanded" aria-labelledby="user-management-btn" id="user-management">
                   <li class="px-1 py-0.5 first:mt-2">
-                      <a href="#"
-                          class="flex items-center rounded-radius gap-2 px-2 py-1.5 text-sm text-on-surface underline-offset-2 hover:bg-primary/5 hover:text-on-surface-strong focus:outline-hidden focus-visible:underline dark:text-on-surface-dark dark:hover:bg-primary-dark/5 dark:hover:text-on-surface-dark-strong">Users</a>
+                      <a href="{{ route('roles.index') }}" @class([
+                          'flex items-center rounded-radius gap-2 px-2 py-1.5 text-sm text-on-surface underline-offset-2 hover:bg-primary/5 hover:text-on-surface-strong focus:outline-hidden focus-visible:underline',
+                          'bg-black/10 text-slate-900' => request()->routeIs('roles.*'),
+                      ])>Roles</a>
                   </li>
                   <li class="px-1 py-0.5 first:mt-2">
-                      <a href="#"
-                          class="flex items-center rounded-radius gap-2 px-2 py-1.5 text-sm text-on-surface underline-offset-2 hover:bg-primary/5 hover:text-on-surface-strong focus:outline-hidden focus-visible:underline dark:text-on-surface-dark dark:hover:bg-primary-dark/5 dark:hover:text-on-surface-dark-strong">Permissions</a>
-                  </li>
-                  <li class="px-1 py-0.5 first:mt-2">
-                      <a href="#"
-                          class="flex items-center rounded-radius gap-2 px-2 py-1.5 text-sm text-on-surface underline-offset-2 hover:bg-primary/5 hover:text-on-surface-strong focus:outline-hidden focus-visible:underline dark:text-on-surface-dark dark:hover:bg-primary-dark/5 dark:hover:text-on-surface-dark-strong">Activity
-                          Log</a>
+                      <a href="{{ route('permissions.index') }}" @class([
+                          'flex items-center rounded-radius gap-2 px-2 py-1.5 text-sm text-on-surface underline-offset-2 hover:bg-primary/5 hover:text-on-surface-strong focus:outline-hidden focus-visible:underline',
+                          'bg-black/10 text-slate-900' => request()->routeIs('permissions.*'),
+                      ])>Permissions</a>
                   </li>
               </ul>
           </div>

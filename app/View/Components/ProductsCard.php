@@ -5,6 +5,7 @@ namespace App\View\Components;
 use App\Models\Product;
 use App\Models\Variation;
 use Closure;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Number;
 use Illuminate\View\Component;
@@ -27,6 +28,15 @@ class ProductsCard extends Component
         $products = Product::where('status', '!=', 'inactive')
             ->where('visibility', '=', 'public')
             ->with('variations')
+            ->withAvg(
+                [
+                    'reviews' => function (Builder $query) {
+                        $query->where('status', 'published');
+                    }
+                ],
+                'rating'
+            )
+            ->withCount(['reviews' => fn(Builder $query) => $query->where('status', 'published')])
             ->take(24)
             ->get();
 
@@ -46,6 +56,7 @@ class ProductsCard extends Component
                     $product->price = Number::currency($product->price, 'ksh');
                 }
             }
+            $product->reviews_avg_rating = round($product->reviews_avg_rating);
         });
         return view('components.products-card', compact('products'));
     }

@@ -12,12 +12,13 @@ return new class extends Migration {
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
+            $table->string('review_id');
             $table->string('title')->nullable();
             $table->integer('rating');
             $table->text('message');
             $table->boolean('anonymous')->default(false);
-            $table->enum('status', ['pending', 'success', 'cancelled'])->default('pending');
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->enum('status', ['pending', 'published', 'cancelled'])->default('pending');
+            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
             $table->foreignId('order_item_id')->constrained('order_items')->cascadeOnDelete();
             $table->timestamps();

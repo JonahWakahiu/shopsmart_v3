@@ -14,8 +14,10 @@ return new class extends Migration {
             $table->comment('Product attributes');
             $table->id();
             $table->string('name')->unique();
-            $table->string('sku')->nullable();
-            $table->text('description')->nullable();
+            $table->string('slug')->unique();
+            $table->enum('watch_type', ['label', 'color', 'image'])->nullable();
+            $table->enum('watch_shape', ['square', 'rounded-corner', 'circle'])->nullable();
+            $table->integer('watch_size')->nullable();
             $table->timestamps();
         });
     }

@@ -83,7 +83,7 @@
                                     <img class="size-8 rounded-full object-cover" :src="customer.avatar"
                                         alt="customer avatar" />
                                     <div class="flex flex-col">
-                                        <span class="text-slate-900" x-text="customer.name">Alice Brown</span>
+                                        <span class="text-slate-900" x-text="customer.name"></span>
                                         <span class="text-sm text-slate-600 opacity-85" x-text="customer.email"></span>
                                     </div>
                                 </div>
@@ -247,6 +247,7 @@
                 Alpine.data('customers', () => ({
                     customers: {},
                     checkAll: false,
+                    modalIsOpen: false,
 
                     // pagination
                     rowsPerPage: 10,

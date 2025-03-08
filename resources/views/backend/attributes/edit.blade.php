@@ -16,43 +16,45 @@
                     </svg>
                 </li>
                 <li class="flex items-center gap-1">
-                    <a href="#" class="hover:text-slate-900 dark:hover:text-white">Products</a>
+                    <a href="{{ route('attributes.index') }}"
+                        class="hover:text-slate-900 dark:hover:text-white">Attributes</a>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true"
                         stroke-width="2" stroke="currentColor" class="size-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                     </svg>
                 </li>
                 <li class="flex items-center gap-1 font-bold text-slate-900 dark:text-white" aria-current="page">
-                    List</li>
+                    Edit</li>
             </ol>
         </nav>
 
         <h2 class="font-bold text-xl text-gray-800 leading-tight">
-            {{ __('Products') }}
+            {{ 'Product ' . $attribute->name }}
         </h2>
+
+        <p class="mt-3 text-sm text-slate-500">Note: Deleting a term will remove it from all products and variations to
+            which it has been assigned.
+            Recreating a term will not automatically assign it back to products</p>
     </x-slot>
 
 
-    <div x-data="products" class="rounded bg-slate-50 shadow">
+    <div x-data="attributeValues" class="rounded bg-slate-50 shadow">
         <div class="flex items-center p-3">
             {{-- search input --}}
             <x-forms.search-input x-model="q" />
 
-
             <div class="ms-auto">
-                <a href="{{ route('products.create') }}"
+                <button @click="openModal" type="button"
                     class="px-5 py-2 text-sm bg-indigo-500 text-white rounded flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="size-4 shrink-0"
                         fill="currentColor">
                         <path
                             d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z" />
                     </svg>
-                    <span>Add Product</span>
-                </a>
+                    <span>New attribute</span>
+                </button>
             </div>
-
         </div>
-
         <div class="overflow-hidden w-full overflow-x-auto">
             <table class="w-full text-left text-sm">
                 <thead class="border-y border-slate-200 text-slate-800">
@@ -62,92 +64,48 @@
                                 <x-forms.checkbox id="checkAll" x-model="checkAll" />
                             </label>
                         </th>
-                        <th scope="col" class="p-4">Product</th>
-                        <th scope="col" class="p-4">Price</th>
-                        <th scope="col" class="p-4">Stock</th>
-                        <th scope="col" class="p-4 ">Category</th>
-                        <th scope="col" class="p-4">Rating</th>
-                        <th scope="col" class="p-4">Published On</th>
+                        <th scope="col" class="p-4">Preview</th>
+                        <th scope="col" class="p-4">Name</th>
+                        <th scope="col" class="p-4">Description</th>
+                        <th scope="col" class="p-4">Slug</th>
+                        <th scope="col" class="p-4">Count</th>
                         <th scope="col" class="p-4">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-200">
-                    <template x-for="product in products" :key="product.id">
+                    <template x-for="attributeValue in attributeValues" :key="attributeValue.id">
                         <tr>
                             <td class="p-4">
-                                <label :for="product.id"
+                                <label :for="attributeValue.id"
                                     class="flex items-center text-on-surface dark:text-on-surface-dark ">
-                                    <x-forms.checkbox ::id="product.id" ::checked="checkAll" />
+                                    <x-forms.checkbox ::id="attributeValue.id" ::checked="checkAll" />
                                 </label>
                             </td>
-
                             <td class="p-4">
-                                <div class="flex items-center">
-                                    <div class="size-14 rounded overflow-hidden me-3">
-                                        <img :src="product.image" alt="product image"
-                                            class="w-full h-full object-cover">
+                                <template x-if="attribute.watch_type == 'color' && attributeValue.value">
+                                    <div class="size-10 rounded border border-slate-200"
+                                        :style="'background-color: ' + attributeValue.value">
                                     </div>
-                                    <div class="text-sm">
-                                        <p class="w-96 truncate capitalize" x-text="product.name"></p>
-
-                                        <template x-if="product.attributes">
-                                            <template x-for="(values, name) in product.attributes"
-                                                :key="name">
-                                                <div class="flex items-center gap-3 mt-1">
-                                                    <p class="capitalize text-slate-500" x-text="name + ':'"></p>
-                                                    <p x-text="values.join(', ')"></p>
-                                                </div>
-                                            </template>
-                                        </template>
-                                    </div>
-                                </div>
+                                </template>
                             </td>
-
-                            <td class="p-4 whitespace-nowrap" x-text="product.price"></td>
-                            <td class="p-4" x-text="product.stock"></td>
-                            <td class="p-4 whitespace-nowrap" x-text="product.category.name"></td>
-                            <td class="p-4 whitespace-nowrap">
-                                <div class="flex items-center gap-3">
-                                    <p x-text="product.visibility"></p>
-                                    <div class="bg-white rounded text-sm flex items-center gap-2 p-1.5">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
-                                            class="size-4 text-orange-500" fill="currentColor">
-                                            <path
-                                                d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                        </svg>
-                                        <span x-text="product.reviews_avg_rating"></span>
-                                    </div>
-                                    <p class="text-sm text-slate-500">
-                                        <span x-text="product.reviews_count"></span> Reviews
-                                    </p>
-                                </div>
-                            </td>
-                            <td class="p-4 whitespace-nowrap" x-text="product.published_on"></td>
-
+                            <td class="p-4" x-text="attributeValue.name"></td>
+                            <td class="p-4" x-text="attributeValue.description"></td>
+                            <td class="p-4" x-text="attributeValue.slug"></td>
+                            <td class="p-4"></td>
                             <td class="p-4">
                                 <div class="flex items-center gap-2">
-                                    {{-- show product --}}
-                                    <a :href="'{{ route('products.show', ':id') }}'.replace(':id', product.id)"
-                                        type="button" class="bg-sky-100 text-sky-500 p-1 rounded">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="size-4"
-                                            fill="currentColor">
-                                            <path
-                                                d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z" />
-                                        </svg>
-                                    </a>
-
-                                    {{-- edit product --}}
-                                    <a :href="'{{ route('products.edit', ':id') }}'.replace(':id', product.id)"
-                                        type="button" class="bg-indigo-100 text-indigo-500 p-1 rounded">
+                                    {{-- edit attribute --}}
+                                    <button @click="openEditModal(attributeValue)" type="button"
+                                        class="bg-indigo-100 text-indigo-500 p-1 rounded">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="size-4"
                                             fill="currentColor">
                                             <path
                                                 d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160L0 416c0 53 43 96 96 96l256 0c53 0 96-43 96-96l0-96c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7-14.3 32-32 32L96 448c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 64z" />
                                         </svg>
-                                    </a>
+                                    </button>
 
-                                    {{-- delete product --}}
-                                    <button @click="deleteproduct(product)" type="button"
+                                    {{-- delete attribute --}}
+                                    <button @click="deleteattribute(attributeValue)" type="button"
                                         class="bg-red-100 text-red-500 p-1 rounded">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="size-4"
                                             fill="currentColor">
@@ -160,7 +118,7 @@
                         </tr>
                     </template>
 
-                    <template x-if="products.length == 0">
+                    <template x-if="attributeValues.length == 0">
                         <tr>
                             <td colspan="8" class="p-4">
                                 <p class="text-slate-500">No data available at the moment</p>
@@ -173,7 +131,7 @@
 
         <div class="flex items-center gap-2 p-4 border-t border-slate-300">
             <x-forms.input-label for="rowsPerPage">Rows per page
-                <x-forms.select-input x-model="rowsPerPage" id="rowPerPage" @change="productsList">
+                <x-forms.select-input x-model="rowsPerPage" id="rowPerPage" @change="attributeValuesList">
                     <option value="10">10</option>
                     <option value="20">20</option>
                     <option value="50">50</option>
@@ -188,8 +146,6 @@
                 <span>items</span>
                 <span x-text="total"></span>
             </div>
-
-
 
             {{-- pagination --}}
             <nav aria-label="pagination" class="ms-auto shrink-0 text-sm">
@@ -270,14 +226,144 @@
             </nav>
         </div>
 
+        {{-- new attribute value modal --}}
+        <div x-cloak x-show="modalIsOpen" x-transition.opacity.duration.200ms x-trap.inert.noscroll="modalIsOpen"
+            x-on:keydown.esc.window="closeModal" x-on:click.self="closeModal"
+            class="fixed inset-0 z-30 flex items-end justify-center bg-black/20 p-4 pb-8 backdrop-blur-md sm:items-center lg:p-8">
+            <!-- Modal Dialog -->
+            <div x-show="modalIsOpen"
+                x-transition:enter="transition ease-out duration-200 delay-100 motion-reduce:transition-opacity"
+                x-transition:enter-start="opacity-0 scale-50" x-transition:enter-end="opacity-100 scale-100"
+                class="flex max-w-lg w-[24rem] flex-col gap-4 relative rounded border border-slate-200 bg-white text-slate-600 p-5"
+                x-data="{ watch_shape: '' }">
+
+                <button @click="closeModal"
+                    class="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2 bg-white shadow p-1 rounded">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="size-4"
+                        fill="currentColor">
+                        <path
+                            d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                    </svg>
+                </button>
+                <!-- Dialog Header -->
+
+                <div class="">
+                    <p class="text-xl font-medium">Add new <span x-text="attribute.name"></span></p>
+                </div>
+
+                <form @submit.prevent="newAttributeValue($event)">
+                    @csrf
+                    <div>
+                        <x-forms.input-label value="Name" />
+                        <x-forms.text-input class="w-full" name="name" />
+                    </div>
+
+                    <div class="mt-4">
+                        <x-forms.input-label value="Slug" />
+                        <x-forms.text-input class=" w-full" name="slug" />
+                    </div>
+
+                    <div class="mt-4">
+                        <x-forms.input-label value="Description" />
+                        <x-forms.textarea class=" w-full" name="description" />
+                    </div>
+
+
+                    <div class="mt-4" x-cloak x-show="attribute.watch_type == 'color'">
+                        <x-forms.input-label value="Color" />
+                        <x-forms.text-input class="" name="value" class="w-full h-10 px-1 py-1"
+                            type="color" />
+                    </div>
+
+                    <div class="mt-5 flex items-center gap-3">
+                        <button type="submit" class="px-5 py-2 rounded bg-indigo-500 text-white text-sm">Save
+                            Changes</button>
+
+                        <button type="reset"
+                            class="px-5 py-2 rounded border border-slate-200 text-sm bg-slate-50">Reset</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {{-- update attribute value modal --}}
+        <div x-cloak x-show="editModalIsOpen" x-transition.opacity.duration.200ms
+            x-trap.inert.noscroll="editModalIsOpen" x-on:keydown.esc.window="closeEditModal"
+            x-on:click.self="closeEditModal"
+            class="fixed inset-0 z-30 flex items-end justify-center bg-black/20 p-4 pb-8 backdrop-blur-md sm:items-center lg:p-8">
+            <!-- Modal Dialog -->
+            <div x-show="editModalIsOpen"
+                x-transition:enter="transition ease-out duration-200 delay-100 motion-reduce:transition-opacity"
+                x-transition:enter-start="opacity-0 scale-50" x-transition:enter-end="opacity-100 scale-100"
+                class="flex max-w-lg w-[24rem] flex-col gap-4 relative rounded border border-slate-200 bg-white text-slate-600 p-5"
+                x-data="{ watch_shape: '' }">
+
+                <button @click="closeEditModal"
+                    class="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2 bg-white shadow p-1 rounded">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="size-4"
+                        fill="currentColor">
+                        <path
+                            d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                    </svg>
+                </button>
+                <!-- Dialog Header -->
+
+                <div class="">
+                    <p class="text-xl font-medium">Edit <span x-text="selectedAttributeValue.name"></span></p>
+                </div>
+
+                <form @submit.prevent="updateAttributeValue($event)">
+                    @csrf
+                    @method('put')
+
+                    <div>
+                        <x-forms.input-label value="Name" />
+                        <x-forms.text-input class="w-full" name="name" x-model="selectedAttributeValue.name" />
+                    </div>
+
+                    <div class="mt-4">
+                        <x-forms.input-label value="Slug" />
+                        <x-forms.text-input class=" w-full" name="slug" x-model="selectedAttributeValue.slug" />
+                    </div>
+
+                    <div class="mt-4">
+                        <x-forms.input-label value="Description" />
+                        <x-forms.textarea class=" w-full" name="description"
+                            x-model="selectedAttributeValue.description" />
+                    </div>
+
+
+                    <div class="mt-4" x-cloak x-show="attribute.watch_type == 'color'">
+                        <x-forms.input-label value="Color" />
+                        <x-forms.text-input class="" name="value" class="w-full h-10 px-1 py-1"
+                            type="color" x-model="selectedAttributeValue.value" />
+                    </div>
+
+                    <div class="mt-5 flex items-center gap-3">
+                        <button type="submit" class="px-5 py-2 rounded bg-indigo-500 text-white text-sm">Save
+                            Changes</button>
+
+                        <button type="reset"
+                            class="px-5 py-2 rounded border border-slate-200 text-sm bg-slate-50">Reset</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+
 
     @push('scripts')
         <script>
             document.addEventListener('alpine:init', () => {
-                Alpine.data('products', () => ({
-                    products: {},
+
+                Alpine.data('attributeValues', () => ({
+                    attribute: {},
+                    attributeValues: {},
+                    selectedAttributeValue: {},
                     checkAll: false,
+                    modalIsOpen: false,
+                    editModalIsOpen: false,
+                    errors: {},
 
                     // pagination
                     rowsPerPage: 10,
@@ -286,25 +372,45 @@
                     total: 0,
                     currentPage: 1,
                     totalPages: 1,
+                    checked: 0,
 
                     // filter
                     q: '',
 
-                    async productsList() {
+                    openModal() {
+                        this.modalIsOpen = true;
+                    },
+
+                    closeModal() {
+                        this.modalIsOpen = false;
+                    },
+
+                    openEditModal(attributeValue) {
+                        this.selectedAttributeValue = attributeValue;
+                        this.editModalIsOpen = true;
+                    },
+
+                    closeEditModal() {
+                        this.editModalIsOpen = false;
+                        this.selectedAttributeValue = {};
+                    },
+
+                    async attributeValuesList() {
                         try {
-                            const response = await axios.get('{{ route('products.list') }}', {
-                                params: {
-                                    rowsPerPage: this.rowsPerPage,
-                                    page: this.currentPage,
+                            const response = await axios.get(
+                                `{{ route('attributes.values.index', ':id') }}`.replace(':id', this
+                                    .attribute.id), {
+                                    params: {
+                                        rowsPerPage: this.rowsPerPage,
+                                        page: this.currentPage,
 
-                                    q: this.q,
+                                        q: this.q,
 
-                                }
-                            });
+                                    }
+                                });
 
                             if (response.status === 200) {
-                                console.log(response);
-                                this.products = response.data.data;
+                                this.attributeValues = response.data.data;
                                 this.from = response.data.from;
                                 this.to = response.data.to;
                                 this.total = response.data.total;
@@ -331,51 +437,77 @@
                     prevPage() {
                         if (this.currentPage > 1) {
                             this.currentPage--;
-                            this.productsList();
+                            this.attributeValuesList();
                         }
                     },
 
                     nextPage() {
                         if (this.currentPage < this.totalPages) {
                             this.currentPage++;
-                            this.productsList();
+                            this.attributeValuesList();
                         }
                     },
 
                     goToPage(page) {
                         this.currentPage = page;
-                        this.productsList();
+                        this.attributeValuesList();
                     },
 
-                    async deleteproduct(product) {
+
+                    async newAttributeValue(event) {
                         try {
-                            if (confirm('Are you sure?')) {
-                                const response = await axios.delete(
-                                    `{{ route('products.destroy', ':id') }}`.replace(':id',
-                                        product.id));
+                            this.errors = {};
+                            const formData = new FormData(event.target);
 
-                                if (response.status == 200) {
-                                    this.productsList();
-                                }
+                            const response = await axios.post(
+                                `{{ route('attributes.values.store', ':attributeId') }}`.replace(
+                                    ':attributeId', this.attribute.id),
+                                formData);
+
+                            if (response.status == 200) {
+                                event.target.reset();
+                                this.closeModal();
+                                this.attributeValuesList();
                             }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    },
 
+                    async updateAttributeValue(event) {
+                        try {
+                            this.errors = {};
+                            const formData = new FormData(event.target);
+
+                            const response = await axios.post(
+                                `{{ route('attributes.values.update', ['attribute' => ':attributeId', 'value' => ':valueId']) }}`
+                                .replace(
+                                    ':attributeId', this.attribute.id).replace(
+                                    ':valueId', this.selectedAttributeValue.id),
+                                formData);
+
+                            if (response.status == 200) {
+                                event.target.reset();
+                                this.closeEditModal();
+                                this.attributeValuesList();
+                            }
                         } catch (error) {
                             console.log(error);
                         }
                     },
 
                     init() {
-                        this.products = @json($products).data;
-                        this.from = @json($products).from;
-                        this.to = @json($products).to;
-                        this.total = @json($products).total;
-                        this.currentPage = @json($products).current_page;
-                        this.totalPages = @json($products).last_page;
+                        this.attribute = @json($attribute);
+                        this.attributeValues = @json($values).data;
+                        this.from = @json($values).from;
+                        this.to = @json($values).to;
+                        this.total = @json($values).total;
+                        this.currentPage = @json($values).current_page;
+                        this.totalPages = @json($values).last_page;
 
-                        console.log(this.products);
 
                         this.$watch('q', () => {
-                            this.productsList();
+                            this.attributeValuesList();
                         });
                     }
                 }))

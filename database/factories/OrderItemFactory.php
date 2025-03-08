@@ -17,7 +17,7 @@ class OrderItemFactory extends Factory
      */
     public function definition(): array
     {
-        $product = Product::inRandomOrder()->with('variations')->first();
+        $product = Product::where('visibility', 'public')->inRandomOrder()->with('variations')->first();
         $variation = $product->variations?->shuffle()->first();
 
         return [

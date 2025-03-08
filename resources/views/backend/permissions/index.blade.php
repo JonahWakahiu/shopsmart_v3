@@ -16,7 +16,7 @@
                     </svg>
                 </li>
                 <li class="flex items-center gap-1">
-                    <a href="#" class="hover:text-slate-900 dark:hover:text-white">Products</a>
+                    <a href="#" class="hover:text-slate-900 dark:hover:text-white">Permissions</a>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true"
                         stroke-width="2" stroke="currentColor" class="size-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
@@ -28,28 +28,16 @@
         </nav>
 
         <h2 class="font-bold text-xl text-gray-800 leading-tight">
-            {{ __('Products') }}
+            {{ __('Permissions') }}
         </h2>
     </x-slot>
 
 
-    <div x-data="products" class="rounded bg-slate-50 shadow">
+    <div x-data="permissions" class="rounded bg-slate-50 shadow">
         <div class="flex items-center p-3">
             {{-- search input --}}
             <x-forms.search-input x-model="q" />
 
-
-            <div class="ms-auto">
-                <a href="{{ route('products.create') }}"
-                    class="px-5 py-2 text-sm bg-indigo-500 text-white rounded flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="size-4 shrink-0"
-                        fill="currentColor">
-                        <path
-                            d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z" />
-                    </svg>
-                    <span>Add Product</span>
-                </a>
-            </div>
 
         </div>
 
@@ -62,105 +50,48 @@
                                 <x-forms.checkbox id="checkAll" x-model="checkAll" />
                             </label>
                         </th>
-                        <th scope="col" class="p-4">Product</th>
-                        <th scope="col" class="p-4">Price</th>
-                        <th scope="col" class="p-4">Stock</th>
-                        <th scope="col" class="p-4 ">Category</th>
-                        <th scope="col" class="p-4">Rating</th>
-                        <th scope="col" class="p-4">Published On</th>
-                        <th scope="col" class="p-4">Actions</th>
+                        <th scope="col" class="p-4">Permissions</th>
+                        <template x-for="role in roles" :key="role.id">
+                            <th scope="col" class="p-4 capitalize" x-text="role.name"></th>
+                        </template>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-200">
-                    <template x-for="product in products" :key="product.id">
+                    <template x-for="permission in permissions" :key="permission.id">
                         <tr>
                             <td class="p-4">
-                                <label :for="product.id"
+                                <label :for="permission.id"
                                     class="flex items-center text-on-surface dark:text-on-surface-dark ">
-                                    <x-forms.checkbox ::id="product.id" ::checked="checkAll" />
+                                    <x-forms.checkbox ::id="permission.id" ::checked="checkAll" />
                                 </label>
                             </td>
-
-                            <td class="p-4">
-                                <div class="flex items-center">
-                                    <div class="size-14 rounded overflow-hidden me-3">
-                                        <img :src="product.image" alt="product image"
-                                            class="w-full h-full object-cover">
-                                    </div>
-                                    <div class="text-sm">
-                                        <p class="w-96 truncate capitalize" x-text="product.name"></p>
-
-                                        <template x-if="product.attributes">
-                                            <template x-for="(values, name) in product.attributes"
-                                                :key="name">
-                                                <div class="flex items-center gap-3 mt-1">
-                                                    <p class="capitalize text-slate-500" x-text="name + ':'"></p>
-                                                    <p x-text="values.join(', ')"></p>
-                                                </div>
-                                            </template>
-                                        </template>
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td class="p-4 whitespace-nowrap" x-text="product.price"></td>
-                            <td class="p-4" x-text="product.stock"></td>
-                            <td class="p-4 whitespace-nowrap" x-text="product.category.name"></td>
-                            <td class="p-4 whitespace-nowrap">
-                                <div class="flex items-center gap-3">
-                                    <p x-text="product.visibility"></p>
-                                    <div class="bg-white rounded text-sm flex items-center gap-2 p-1.5">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
-                                            class="size-4 text-orange-500" fill="currentColor">
-                                            <path
-                                                d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                                        </svg>
-                                        <span x-text="product.reviews_avg_rating"></span>
-                                    </div>
-                                    <p class="text-sm text-slate-500">
-                                        <span x-text="product.reviews_count"></span> Reviews
-                                    </p>
-                                </div>
-                            </td>
-                            <td class="p-4 whitespace-nowrap" x-text="product.published_on"></td>
-
-                            <td class="p-4">
-                                <div class="flex items-center gap-2">
-                                    {{-- show product --}}
-                                    <a :href="'{{ route('products.show', ':id') }}'.replace(':id', product.id)"
-                                        type="button" class="bg-sky-100 text-sky-500 p-1 rounded">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="size-4"
-                                            fill="currentColor">
-                                            <path
-                                                d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z" />
-                                        </svg>
-                                    </a>
-
-                                    {{-- edit product --}}
-                                    <a :href="'{{ route('products.edit', ':id') }}'.replace(':id', product.id)"
-                                        type="button" class="bg-indigo-100 text-indigo-500 p-1 rounded">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="size-4"
-                                            fill="currentColor">
-                                            <path
-                                                d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160L0 416c0 53 43 96 96 96l256 0c53 0 96-43 96-96l0-96c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7-14.3 32-32 32L96 448c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 64z" />
-                                        </svg>
-                                    </a>
-
-                                    {{-- delete product --}}
-                                    <button @click="deleteproduct(product)" type="button"
-                                        class="bg-red-100 text-red-500 p-1 rounded">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="size-4"
-                                            fill="currentColor">
-                                            <path
-                                                d="M170.5 51.6L151.5 80l145 0-19-28.4c-1.5-2.2-4-3.6-6.7-3.6l-93.7 0c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80 368 80l48 0 8 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-8 0 0 304c0 44.2-35.8 80-80 80l-224 0c-44.2 0-80-35.8-80-80l0-304-8 0c-13.3 0-24-10.7-24-24S10.7 80 24 80l8 0 48 0 13.8 0 36.7-55.1C140.9 9.4 158.4 0 177.1 0l93.7 0c18.7 0 36.2 9.4 46.6 24.9zM80 128l0 304c0 17.7 14.3 32 32 32l224 0c17.7 0 32-14.3 32-32l0-304L80 128zm80 64l0 208c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-208c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0l0 208c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-208c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0l0 208c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-208c0-8.8 7.2-16 16-16s16 7.2 16 16z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
+                            <td class="p-4 capitalize whitespace-nowrap" x-text="permission.name"></td>
+                            <template x-for="role in roles" :key="role.id">
+                                <td class="p-4">
+                                    <template x-if="role.permissions.some(p => p.name === permission.name)">
+                                        <span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
+                                                class="size-5 fill-green-600">
+                                                <path
+                                                    d="M64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
+                                            </svg>
+                                        </span>
+                                    </template>
+                                    <template x-if="!role.permissions.some(p => p.name === permission.name)">
+                                        <span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"
+                                                class="size-5 fill-red-600">
+                                                <path
+                                                    d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                                            </svg>
+                                        </span>
+                                    </template>
+                                </td>
+                            </template>
                         </tr>
                     </template>
 
-                    <template x-if="products.length == 0">
+                    <template x-if="permissions.length == 0">
                         <tr>
                             <td colspan="8" class="p-4">
                                 <p class="text-slate-500">No data available at the moment</p>
@@ -173,7 +104,7 @@
 
         <div class="flex items-center gap-2 p-4 border-t border-slate-300">
             <x-forms.input-label for="rowsPerPage">Rows per page
-                <x-forms.select-input x-model="rowsPerPage" id="rowPerPage" @change="productsList">
+                <x-forms.select-input x-model="rowsPerPage" id="rowPerPage" @change="permissionsList">
                     <option value="10">10</option>
                     <option value="20">20</option>
                     <option value="50">50</option>
@@ -275,8 +206,8 @@
     @push('scripts')
         <script>
             document.addEventListener('alpine:init', () => {
-                Alpine.data('products', () => ({
-                    products: {},
+                Alpine.data('permissions', () => ({
+                    permissions: {},
                     checkAll: false,
 
                     // pagination
@@ -290,9 +221,9 @@
                     // filter
                     q: '',
 
-                    async productsList() {
+                    async permissionsList() {
                         try {
-                            const response = await axios.get('{{ route('products.list') }}', {
+                            const response = await axios.get('{{ route('permissions.list') }}', {
                                 params: {
                                     rowsPerPage: this.rowsPerPage,
                                     page: this.currentPage,
@@ -304,7 +235,7 @@
 
                             if (response.status === 200) {
                                 console.log(response);
-                                this.products = response.data.data;
+                                this.permissions = response.data.data;
                                 this.from = response.data.from;
                                 this.to = response.data.to;
                                 this.total = response.data.total;
@@ -331,31 +262,31 @@
                     prevPage() {
                         if (this.currentPage > 1) {
                             this.currentPage--;
-                            this.productsList();
+                            this.permissionsList();
                         }
                     },
 
                     nextPage() {
                         if (this.currentPage < this.totalPages) {
                             this.currentPage++;
-                            this.productsList();
+                            this.permissionsList();
                         }
                     },
 
                     goToPage(page) {
                         this.currentPage = page;
-                        this.productsList();
+                        this.permissionsList();
                     },
 
-                    async deleteproduct(product) {
+                    async deletepermission(permission) {
                         try {
                             if (confirm('Are you sure?')) {
                                 const response = await axios.delete(
-                                    `{{ route('products.destroy', ':id') }}`.replace(':id',
-                                        product.id));
+                                    `{{ route('permissions.destroy', ':id') }}`.replace(':id',
+                                        permission.id));
 
                                 if (response.status == 200) {
-                                    this.productsList();
+                                    this.permissionsList();
                                 }
                             }
 
@@ -365,17 +296,18 @@
                     },
 
                     init() {
-                        this.products = @json($products).data;
-                        this.from = @json($products).from;
-                        this.to = @json($products).to;
-                        this.total = @json($products).total;
-                        this.currentPage = @json($products).current_page;
-                        this.totalPages = @json($products).last_page;
+                        this.roles = @json($roles);
+                        this.permissions = @json($permissions).data;
+                        this.from = @json($permissions).from;
+                        this.to = @json($permissions).to;
+                        this.total = @json($permissions).total;
+                        this.currentPage = @json($permissions).current_page;
+                        this.totalPages = @json($permissions).last_page;
 
-                        console.log(this.products);
+                        console.log(this.permissions);
 
                         this.$watch('q', () => {
-                            this.productsList();
+                            this.permissionsList();
                         });
                     }
                 }))
