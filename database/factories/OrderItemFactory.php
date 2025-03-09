@@ -22,7 +22,6 @@ class OrderItemFactory extends Factory
 
         return [
             'quantity' => fake()->numberBetween(1, 10),
-            'status' => fake()->randomElement(['pending', 'shipped', 'delivered', 'cancelled']),
             'product_id' => $product->id,
             'variation_id' => $variation?->id,
         ];

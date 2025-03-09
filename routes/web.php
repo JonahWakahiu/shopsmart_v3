@@ -42,6 +42,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('products', ProductsController::class);
 
     Route::get('orders/list', [OrdersController::class, 'list'])->name('orders.list');
+    Route::put('/items/{item}', [OrdersController::class, 'updateItem'])->name('items.update');
     Route::resource('orders', OrdersController::class);
 
     Route::get('transactions/list', [TransactionsController::class, 'list'])->name('transactions.list');

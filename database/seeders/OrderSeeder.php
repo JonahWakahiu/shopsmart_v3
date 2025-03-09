@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\OrderItemStatus;
 use App\Models\Review;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -17,8 +18,12 @@ class OrderSeeder extends Seeder
     {
         Order::factory()
             ->count(50)
-            ->has(OrderItem::factory()
-                ->count(rand(10, 20)), 'items')
+            ->has(
+                OrderItem::factory()
+                    ->count(rand(10, 20))
+                    ->has(OrderItemStatus::factory(), 'statuses'),
+                'items'
+            )
             ->create();
 
         $orderItems = OrderItem::with(['order.user', 'product'])

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class OrderItem extends Model
@@ -43,6 +44,16 @@ class OrderItem extends Model
     public function review(): HasOne
     {
         return $this->hasOne(Review::class, 'order_item_id');
+    }
+
+    public function statuses(): HasMany
+    {
+        return $this->hasMany(OrderItemStatus::class, 'item_id');
+    }
+
+    public function latestStatus(): HasOne
+    {
+        return $this->hasOne(OrderItemStatus::class, 'item_id')->latestOfMany();
     }
 
 

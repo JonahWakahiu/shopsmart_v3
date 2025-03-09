@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\OrderItem;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Number;
@@ -66,7 +67,32 @@ class OrdersController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        $order->load([
+            'payment',
+            'user',
+            'items' => [
+                'product',
+                'variation',
+                'latestStatus',
+            ],
+            'latestStatus'
+        ]);
+
+        $order->items->map(function (OrderItem $item) {
+            $item->price = Number::currency($item->price, 'ksh');
+            $item->discount = Number::currency($item->discount ?? 0, 'ksh');
+            $item->total = Number::currency($item->total, 'ksh');
+            return $item;
+        });
+        $order->placed_on = Carbon::parse($order->created_at)->format('F j, Y \a\t g:i a');
+
+        $order->subtotal = Number::currency($order->subtotal, 'ksh');
+        $order->discount = Number::currency($order->discount ?? 0, 'ksh');
+        $order->delivery_charge = Number::currency($order->delivery_charge ?? 0, 'ksh');
+        $order->tax = Number::currency($order->tax ?? 0, 'ksh');
+        $order->total = Number::currency($order->total, 'ksh');
+
+        return view('backend.orders.show', compact('order'));
     }
 
     /**
@@ -74,7 +100,6 @@ class OrdersController extends Controller
      */
     public function edit(Order $order)
     {
-        //
     }
 
     /**
@@ -82,7 +107,45 @@ class OrdersController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        //
+        $validated = $request->validate([
+            'status' => 'required|string|in:pending,processing,delivered,cancelled',
+            'notes' => 'nullable|string',
+        ]);
+
+        try {
+            $order->statuses()->create([
+                'status' => $validated['status'],
+                'notes' => $validated['notes'],
+                'changed_by' => $request->user()->id,
+                'order_id' => $order->id,
+            ]);
+
+            return response()->json(['success' => true], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], 500);
+
+        }
+    }
+
+    public function updateItem(Request $request, OrderItem $item)
+    {
+        $validated = $request->validate([
+            'status' => 'required|string|in:pending,shipped,delivered,cancelled',
+            'notes' => 'nullable|string',
+        ]);
+
+        try {
+            $item->statuses()->create([
+                'status' => $validated['status'],
+                'notes' => $validated['notes'],
+                'changed_by' => $request->user()->id,
+                'item_id' => $item->id,
+            ]);
+            return response()->json(['success' => true], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], 500);
+
+        }
     }
 
     /**

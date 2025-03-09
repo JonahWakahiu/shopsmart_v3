@@ -18,7 +18,6 @@ return new class extends Migration {
             $table->decimal('total', 10, 2)->nullable();
             $table->decimal('delivery_charge', 10, 2)->nullable();
             $table->decimal('tax', 10, 2)->nullable();
-            $table->enum('status', ['pending', 'shipped', 'delivered', 'cancelled'])->default('pending');
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
             $table->foreignId('variation_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('order_id')->constrained()->cascadeOnDelete();

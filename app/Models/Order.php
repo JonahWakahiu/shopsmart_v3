@@ -40,6 +40,17 @@ class Order extends Model
         return $this->hasOne(Payment::class);
     }
 
+    public function statuses(): HasMany
+    {
+        return $this->hasMany(OrderStatus::class);
+    }
+
+    public function latestStatus(): HasOne
+    {
+        return $this->hasOne(OrderStatus::class, 'order_id')->latestOfMany()
+            ->withDefault(['status' => 'processing']);
+    }
+
     protected static function booted(): void
     {
         static::creating(function (self $order) {
